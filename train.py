@@ -15,6 +15,8 @@ from util.helpers.setup import checkpoint, make_dirs, newline, save_model_info, 
 from util.benchmark import cifar10
 from util.parser import get_default_parser
 
+from .Attack import fgsm,pgd
+
 to_list = lambda t: t.cpu().data.numpy().tolist()
 
 
@@ -87,18 +89,24 @@ def main():
 
         labels_scores = []
 
-        with torch.no_grad():
-            for i, batch in enumerate(val_loader):
+        # with torch.no_grad():
+        for i, batch in enumerate(val_loader):
 
-                f.eval()
+            f.eval()
 
-                x, labels = batch
+            x, labels = batch
 
-                x, labels = to_gpu(x, labels)
+            x, labels = to_gpu(x, labels)
 
-                scores = torch.sigmoid(f(x)).squeeze()
+            scores = torch.sigmoid(f(x)).squeeze()
 
-                labels_scores += list(zip(to_list(labels), to_list(scores)))
+            labels_scores += list(zip(to_list(labels), to_list(scores)))
+            
+            
+            fgsm(f,x,0.01)
+                
+                
+                
 
         labels, scores = zip(*labels_scores)
         labels, scores = np.array(labels), np.array(scores)

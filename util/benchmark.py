@@ -1,6 +1,7 @@
 import torch
 
 from util.cifar import CIFAR10, CIFAR100OE
+from util.mnist import MNIST
 
 
 def cifar10(config):
@@ -17,7 +18,7 @@ def cifar10(config):
         pin_memory=True,
         shuffle=True)
     val_loader = torch.utils.data.DataLoader(dataset=cifar10.test_set,
-        batch_size=100,
+        batch_size=1,
         num_workers=1,
         pin_memory=True)
     
@@ -29,3 +30,25 @@ def cifar10(config):
         shuffle=True)
 
     return train_loader, oe_loader, val_loader
+
+
+def mnist(config):
+    assert config.normal_class in range(10), "Set normal_class to 0-9."
+
+    cifar10 = MNIST(root=config.data_path,
+        normal_class=config.normal_class,
+        hold_one_out=config.benchmark == "hold_one_out")
+    
+
+    train_loader = torch.utils.data.DataLoader(dataset=cifar10.train_set,
+        batch_size=config.batch_size//2,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    val_loader = torch.utils.data.DataLoader(dataset=cifar10.test_set,
+        batch_size=1,
+        num_workers=1,
+        pin_memory=True)
+
+
+    return train_loader, None, val_loader

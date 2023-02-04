@@ -17,8 +17,6 @@ from util.parser import get_default_parser
 
 from Attack import fgsm,pgd
 
-import pandas as pd 
-
 to_list = lambda t: t.cpu().data.numpy().tolist()
 
 
@@ -92,26 +90,13 @@ def main():
 
         # labels_scores = []
 
-    mine_result={}
-    mine_result['Attack_Type']=[]
-    mine_result['Attack_Target']=[]
-    mine_result['ADV_AUC']=[]
-    
-    for att_type in ['fgsm', 'pgd']:
-        for att_target in ['clear', 'normal','anomal','both']:
-            auc=testModel(f,val_loader,att_type,att_target)   
-            
-            mine_result['Attack_Type'].append(att_type)
-            mine_result['Attack_Target'].append(att_target)
-            mine_result['ADV_AUC'].append(auc) 
-            
-            df = pd.DataFrame(mine_result)
-            df.to_csv(os.path.join('./',f'Results_Class_{config.normal_class}.csv'), index=False)
+    # testModel(f,val_loader,attack_type,attack_target)    
+    testModel(f,val_loader)    
 
 
 
 def testModel(f,val_loader,attack_type='fgsm',attack_target='clean'):
-    
+    labels_scores=[]
     
     labels_arr=[]
     scores_arr=[]
@@ -144,17 +129,29 @@ def testModel(f,val_loader,attack_type='fgsm',attack_target='clean'):
             x = x+adv_delta if labels==0 else x-adv_delta
         
         scores = torch.sigmoid(f(x)).squeeze()
+        print(scores.shape)
         
         
         labels_arr.append(labels.detach().cpu().item())
         scores_arr.append(scores.detach().cpu().item())
 
+        
+        
+        # labels_scores += list(zip([labels], [scores]))
+
+        # torch.cuda.empty_cache()
 
 
+    # labels, scores = zip(*labels_scores)
+    # labels, scores = np.array(labels), np.array(scores)
+
+    # ap = average_precision_score(labels, scores)
+    # auc = roc_auc_score(labels, scores)
+    print(labels_arr)
+    print(scores_arr)
     auc = roc_auc_score(labels_arr, scores_arr)
 
-    return auc
-    
+    print(auc)
     
 
 

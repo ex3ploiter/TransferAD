@@ -103,7 +103,7 @@ def main():
             labels_scores += list(zip(to_list(labels), to_list(scores)))
             
             
-            fgsm(f,x,0.01)
+            # fgsm(f,x,0.01)
                 
                 
                 

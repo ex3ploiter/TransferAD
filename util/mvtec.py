@@ -44,18 +44,18 @@ class MVTec(torch.utils.data.Dataset):
         target_transform = transforms.Lambda(lambda x: int(x in self.outlier_classes))
 
 
-        self.train_set = torchvision.datasets.MyMVTec(root=root,
+        self.train_set = MyMVTec(root=root,
             train=True,
             transform=train_transform,
             target_transform=target_transform,
-            normal_class= self.normal_classes)
+            normal_class= normal_class)
 
         
-        self.test_set = torchvision.datasets.MyMVTec(root=root,
+        self.test_set = MyMVTec(root=root,
             train=False,
             transform=train_transform,
             target_transform=target_transform,
-            normal_class= self.normal_classes)
+            normal_class= normal_class)
 
 
 
@@ -64,7 +64,7 @@ class MVTec(torch.utils.data.Dataset):
 class MyMVTec(Dataset):
     def __init__(self, root, normal_class, transform=None, target_transform=None, train=True):
         self.transform = transform
-        root=os.path.join(root,'mvtec_anomaly_detection')
+        # root=os.path.join(root,'mvtec_anomaly_detection')
         
         mvtec_labels=['bottle' , 'cable' , 'capsule' , 'carpet' ,'grid' , 'hazelnut', 'leather', 'metal_nut', 'pill', 'screw', 'tile', 'toothbrush', 'transistor', 'wood','zipper']
         category=mvtec_labels[normal_class]

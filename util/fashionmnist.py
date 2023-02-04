@@ -7,7 +7,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import Subset
 
 
-class MNIST(torch.utils.data.Dataset):
+class FashionMNIST(torch.utils.data.Dataset):
     def __init__(self, root, normal_class, hold_one_out=False, img_size=28):
         super().__init__()
         self.normal_classes = tuple([normal_class])
@@ -24,20 +24,20 @@ class MNIST(torch.utils.data.Dataset):
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize((0.1307, 0.1307, 0.1307), (0.3081, 0.3081, 0.3081))]
+            transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530))]
 
         test_transform = [
           torchvision.transforms.Grayscale(num_output_channels=3),
           transforms.Resize(img_size),
             transforms.ToTensor(),
-            transforms.Normalize((0.1307, 0.1307, 0.1307), (0.3081, 0.3081, 0.3081))]
+            transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)
         
         target_transform = transforms.Lambda(lambda x: int(x in self.outlier_classes))
 
-        dataset = torchvision.datasets.MNIST(root=root,
+        dataset = torchvision.datasets.FashionMNIST(root=root,
             train=True,
             transform=train_transform,
             target_transform=target_transform,
@@ -47,7 +47,7 @@ class MNIST(torch.utils.data.Dataset):
         idx = idx.flatten().tolist()
         
         self.train_set = Subset(dataset, idx)
-        self.test_set = torchvision.datasets.MNIST(root=root,
+        self.test_set = torchvision.datasets.FashionMNIST(root=root,
             train=False,
             transform=test_transform,
             target_transform=target_transform,

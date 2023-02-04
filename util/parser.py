@@ -11,7 +11,7 @@ def get_default_parser():
     parser.add_argument('--data_path', type=str, default="data")
 
     parser.add_argument('--benchmark', type=str, default="one_vs_rest", choices=["hold_one_out", "one_vs_rest"])
-    parser.add_argument('--dataset', type=str, default="cifar10", choices=["cifar10"])
+    parser.add_argument('--dataset', type=str, default="cifar10", choices=["cifar10","mnist","fashionmnist",'svhn','cifar100','mvtec'])
     parser.add_argument('--model', type=str, default="adib", choices=["adib", "adra"])
     parser.add_argument('--normal_class', type=int, default=0, choices=range(10))
     parser.add_argument('--params_path', type=str, default="resnet26.pth")

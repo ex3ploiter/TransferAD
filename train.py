@@ -1,25 +1,27 @@
+import pandas as pd
+from Attack import fgsm, pgd
+from util.parser import get_default_parser
+from util.benchmark import fashionmnist
+from util.benchmark import mnist
+from util.benchmark import cifar10
+from util.benchmark import *
+from util.helpers.setup import checkpoint, make_dirs, newline, save_model_info, to_gpu
+from util.helpers.log import Log
+from sklearn.metrics import average_precision_score, roc_auc_score
+from nn.resnet import resnet26
+from nn.helpers.metrics import accuracy
+import time
+import os
+import numpy as np
 import torch
 import torch.nn as nn
 import torchvision
 
-import functools; print = functools.partial(print, flush=True)
-import numpy as np
-import os
-import time
+import functools
+print = functools.partial(print, flush=True)
 
-from nn.helpers.metrics import accuracy
-from nn.resnet import resnet26
-from sklearn.metrics import average_precision_score, roc_auc_score
-from util.helpers.log import Log
-from util.helpers.setup import checkpoint, make_dirs, newline, save_model_info, to_gpu
-from util.benchmark import cifar10
-from util.parser import get_default_parser
 
-from Attack import fgsm,pgd
-
-import pandas as pd 
-
-to_list = lambda t: t.cpu().data.numpy().tolist()
+def to_list(t): return t.cpu().data.numpy().tolist()
 
 
 def main():
@@ -33,6 +35,20 @@ def main():
 
     if config.dataset == "cifar10":
         train_loader, oe_loader, val_loader = cifar10(config)
+    elif config.dataset == "mnist":
+        train_loader, _, val_loader = mnist(config)
+    elif config.dataset == "fashionmnist":
+        train_loader, _, val_loader = fashionmnist(config)
+
+    elif config.dataset == "svhn":
+        train_loader, _, val_loader = svhn(config)
+
+    elif config.dataset == "cifar100":
+        train_loader, _, val_loader = cifar100(config)
+
+    elif config.dataset == "mvtec":
+        train_loader, _, val_loader = mvtec(config)
+
     else:
         raise NotImplementedError
 
@@ -43,15 +59,16 @@ def main():
 
     if config.model == "adib":
         theta_0 = f.params()
-    
-    loss = nn.BCEWithLogitsLoss()    
+
+    loss = nn.BCEWithLogitsLoss()
     optim = torch.optim.SGD(filter(lambda p: p.requires_grad, f.parameters()),
-        lr=config.lr_sgd,
-        momentum=config.momentum_sgd,
-        weight_decay=config.weight_decay)
+                            lr=config.lr_sgd,
+                            momentum=config.momentum_sgd,
+                            weight_decay=config.weight_decay)
     sched = torch.optim.lr_scheduler.MultiStepLR(optim,
-        milestones=list(map(int, config.milestones.split(","))),
-        gamma=config.gamma)
+                                                 milestones=list(
+                                                     map(int, config.milestones.split(","))),
+                                                 gamma=config.gamma)
 
     log = Log(file=out)
     log.register("time", format="{0:.4f}")
@@ -78,7 +95,8 @@ def main():
             l = loss(logits, semi_targets.float())
 
             if config.model == "adib":
-                l += config.alpha * torch.norm(f.params(backprop=True) - theta_0, 2)
+                l += config.alpha * \
+                    torch.norm(f.params(backprop=True) - theta_0, 2)
 
             l.backward()
             optim.step()
@@ -92,71 +110,62 @@ def main():
 
         # labels_scores = []
 
-    mine_result={}
-    mine_result['Attack_Type']=[]
-    mine_result['Attack_Target']=[]
-    mine_result['ADV_AUC']=[]
-    
+    mine_result = {}
+    mine_result['Attack_Type'] = []
+    mine_result['Attack_Target'] = []
+    mine_result['ADV_AUC'] = []
+
     for att_type in ['fgsm', 'pgd']:
-        for att_target in ['clear', 'normal','anomal','both']:
-            auc=testModel(f,val_loader,att_type,att_target)   
-            
+        for att_target in ['clear', 'normal', 'anomal', 'both']:
+            auc = testModel(f, val_loader, att_type, att_target)
+
             mine_result['Attack_Type'].append(att_type)
             mine_result['Attack_Target'].append(att_target)
-            mine_result['ADV_AUC'].append(auc) 
-            
+            mine_result['ADV_AUC'].append(auc)
+
             df = pd.DataFrame(mine_result)
-            df.to_csv(os.path.join('./',f'Results_Class_{config.normal_class}.csv'), index=False)
+            df.to_csv(os.path.join(
+                './', f'Results_Class_{config.normal_class}.csv'), index=False)
 
 
+def testModel(f, val_loader, attack_type='fgsm', attack_target='clean'):
 
-def testModel(f,val_loader,attack_type='fgsm',attack_target='clean'):
-    
-    
-    labels_arr=[]
-    scores_arr=[]
-    
+    labels_arr = []
+    scores_arr = []
+
     for i, batch in enumerate(val_loader):
         x, labels = batch
         x, labels = to_gpu(x, labels)
 
-        shouldBeAttacked=False
-        if attack_target=='normal':
-            if labels==0:
-                shouldBeAttacked=True
-        elif attack_target=='anomal':
-            if labels==1:
-                shouldBeAttacked=True
-        elif attack_target=='both':
-            shouldBeAttacked=True
-                
-        
+        shouldBeAttacked = False
+        if attack_target == 'normal':
+            if labels == 0:
+                shouldBeAttacked = True
+        elif attack_target == 'anomal':
+            if labels == 1:
+                shouldBeAttacked = True
+        elif attack_target == 'both':
+            shouldBeAttacked = True
+
         f.eval()
 
-        
-        if shouldBeAttacked==True:
-            if attack_type=='fgsm':
-                adv_delta=fgsm(f,x,0.1)
-            
-            if attack_type=='pgd':
-                adv_delta=pgd(f,x, 0.1, 1/255, 10)
-            
-            x = x+adv_delta if labels==0 else x-adv_delta
-        
+        if shouldBeAttacked == True:
+            if attack_type == 'fgsm':
+                adv_delta = fgsm(f, x, 0.1)
+
+            if attack_type == 'pgd':
+                adv_delta = pgd(f, x, 0.1, 1/255, 10)
+
+            x = x+adv_delta if labels == 0 else x-adv_delta
+
         scores = torch.sigmoid(f(x)).squeeze()
-        
-        
+
         labels_arr.append(labels.detach().cpu().item())
         scores_arr.append(scores.detach().cpu().item())
-
-
 
     auc = roc_auc_score(labels_arr, scores_arr)
 
     return auc
-    
-    
-
 
 
 if __name__ == "__main__":

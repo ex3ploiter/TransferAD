@@ -1,7 +1,11 @@
 import torch
 
 from util.cifar import CIFAR10, CIFAR100OE
+from util.cifar100 import CIFAR100
 from util.mnist import MNIST
+from util.fashionmnist import FashionMNIST
+from util.svhn import SVHN
+from util.mvtec import MVTec
 
 
 def cifar10(config):
@@ -35,20 +39,107 @@ def cifar10(config):
 def mnist(config):
     assert config.normal_class in range(10), "Set normal_class to 0-9."
 
-    cifar10 = MNIST(root=config.data_path,
+    mnist = MNIST(root=config.data_path,
         normal_class=config.normal_class,
         hold_one_out=config.benchmark == "hold_one_out")
     
 
-    train_loader = torch.utils.data.DataLoader(dataset=cifar10.train_set,
+    train_loader = torch.utils.data.DataLoader(dataset=mnist.train_set,
         batch_size=config.batch_size//2,
         num_workers=1,
         pin_memory=True,
         shuffle=True)
-    val_loader = torch.utils.data.DataLoader(dataset=cifar10.test_set,
+    val_loader = torch.utils.data.DataLoader(dataset=mnist.test_set,
+        batch_size=1,
+        num_workers=1,
+        pin_memory=True)
+
+    return train_loader, None, val_loader
+
+
+
+def fashionmnist(config):
+    assert config.normal_class in range(10), "Set normal_class to 0-9."
+
+    fashionmnist = FashionMNIST(root=config.data_path,
+        normal_class=config.normal_class,
+        hold_one_out=config.benchmark == "hold_one_out")
+    
+
+    train_loader = torch.utils.data.DataLoader(dataset=fashionmnist.train_set,
+        batch_size=config.batch_size//2,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    val_loader = torch.utils.data.DataLoader(dataset=fashionmnist.test_set,
         batch_size=1,
         num_workers=1,
         pin_memory=True)
 
 
     return train_loader, None, val_loader
+
+
+def svhn(config):
+    assert config.normal_class in range(10), "Set normal_class to 0-9."
+
+    fashionmnist = SVHN(root=config.data_path,
+        normal_class=config.normal_class,
+        hold_one_out=config.benchmark == "hold_one_out")
+    
+
+    train_loader = torch.utils.data.DataLoader(dataset=fashionmnist.train_set,
+        batch_size=config.batch_size//2,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    val_loader = torch.utils.data.DataLoader(dataset=fashionmnist.test_set,
+        batch_size=1,
+        num_workers=1,
+        pin_memory=True)
+
+
+    return train_loader, None, val_loader
+
+def cifar100(config):
+    assert config.normal_class in range(10), "Set normal_class to 0-9."
+
+    fashionmnist = CIFAR100(root=config.data_path,
+        normal_class=config.normal_class,
+        hold_one_out=config.benchmark == "hold_one_out")
+    
+
+    train_loader = torch.utils.data.DataLoader(dataset=fashionmnist.train_set,
+        batch_size=config.batch_size//2,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    val_loader = torch.utils.data.DataLoader(dataset=fashionmnist.test_set,
+        batch_size=1,
+        num_workers=1,
+        pin_memory=True)
+
+
+    return train_loader, None, val_loader
+
+def mvtec(config):
+    assert config.normal_class in range(15), "Set normal_class to 0-9."
+
+    fashionmnist = MVTec(root=config.data_path,
+        normal_class=config.normal_class,
+        hold_one_out=config.benchmark == "hold_one_out")
+    
+
+    train_loader = torch.utils.data.DataLoader(dataset=fashionmnist.train_set,
+        batch_size=config.batch_size//2,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    val_loader = torch.utils.data.DataLoader(dataset=fashionmnist.test_set,
+        batch_size=1,
+        num_workers=1,
+        pin_memory=True)
+
+
+    return train_loader, None, val_loader
+

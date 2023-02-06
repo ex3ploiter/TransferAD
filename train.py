@@ -52,7 +52,7 @@ def main():
         alpha=0.029434850439429283
 
     elif config.dataset == "mvtec":
-        config.batch_size=32
+        config.batch_size=16
         train_loader, oe_loader, val_loader = mvtec(config)
         alpha=0.017563117668032646
         

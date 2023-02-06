@@ -179,7 +179,8 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
             if attack_type == 'pgd':
                 adv_delta = attack_pgd(f, x, 8/255 , alpha, 10)
 
-            x = x+adv_delta if labels == 0 else x-adv_delta
+            # x = x+adv_delta if labels == 0 else x-adv_delta
+            x = x+adv_delta if labels == 0 else x+adv_delta
 
         scores = torch.sigmoid(f(x)).squeeze()
 

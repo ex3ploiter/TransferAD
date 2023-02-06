@@ -37,22 +37,22 @@ def main():
         train_loader, oe_loader, val_loader = cifar10(config)
         alpha=0.03131072223186493
     elif config.dataset == "mnist":
-        train_loader, _, val_loader = mnist(config)
+        train_loader, oe_loader, val_loader = mnist(config)
         alpha=0.025456469506025314
     elif config.dataset == "fashionmnist":
-        train_loader, _, val_loader = fashionmnist(config)
+        train_loader, oe_loader, val_loader = fashionmnist(config)
         alpha=0.022218521684408188
 
     elif config.dataset == "svhn":
-        train_loader, _, val_loader = svhn(config)
+        train_loader, oe_loader, val_loader = svhn(config)
         alpha=0.029434230439442433
 
     elif config.dataset == "cifar100":
-        train_loader, _, val_loader = cifar100(config)
+        train_loader, oe_loader, val_loader = cifar100(config)
         alpha=0.029434850439429283
 
     elif config.dataset == "mvtec":
-        train_loader, _, val_loader = mvtec(config)
+        train_loader, oe_loader, val_loader = mvtec(config)
         alpha=0.017563117668032646
         
     else:

@@ -154,7 +154,7 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean'):
                 adv_delta = fgsm(f, x, 0.1)
 
             if attack_type == 'pgd':
-                adv_delta = pgd(f, x, 0.1, 1/255, 10)
+                adv_delta = attack_pgd(f, x, 0.3,0.01, 10)
 
             x = x+adv_delta if labels == 0 else x-adv_delta
 
@@ -163,7 +163,8 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean'):
         labels_arr.append(labels.detach().cpu().item())
         scores_arr.append(scores.detach().cpu().item())
 
-    auc = roc_auc_score(labels_arr, scores_arr)
+    
+    auc  = roc_auc_score(labels_arr, scores_arr)
 
     return auc
 

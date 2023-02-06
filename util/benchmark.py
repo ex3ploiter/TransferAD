@@ -1,11 +1,11 @@
 import torch
 
 from util.cifar import CIFAR10, CIFAR100OE
-from util.cifar100 import CIFAR100
-from util.mnist import MNIST
-from util.fashionmnist import FashionMNIST
-from util.svhn import SVHN
-from util.mvtec import MVTec
+from util.cifar100 import *
+from util.mnist import *
+from util.fashionmnist import *
+from util.svhn import *
+from util.mvtec import *
 
 
 def cifar10(config):
@@ -43,6 +43,8 @@ def mnist(config):
         normal_class=config.normal_class,
         hold_one_out=config.benchmark == "hold_one_out")
     
+    cifar100 = MN_CIFAR100OE(root=config.data_path)
+    
 
     train_loader = torch.utils.data.DataLoader(dataset=mnist.train_set,
         batch_size=config.batch_size//2,
@@ -53,6 +55,16 @@ def mnist(config):
         batch_size=1,
         num_workers=1,
         pin_memory=True)
+    
+    oe_loader = torch.utils.data.DataLoader(dataset=cifar100.oe_set,
+        batch_size=config.batch_size//2,
+        drop_last=True,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    
+    
+    
 
     return train_loader, None, val_loader
 
@@ -65,7 +77,8 @@ def fashionmnist(config):
         normal_class=config.normal_class,
         hold_one_out=config.benchmark == "hold_one_out")
     
-
+    cifar100 = FM_CIFAR100OE(root=config.data_path)
+    
     train_loader = torch.utils.data.DataLoader(dataset=fashionmnist.train_set,
         batch_size=config.batch_size//2,
         num_workers=1,
@@ -75,6 +88,14 @@ def fashionmnist(config):
         batch_size=1,
         num_workers=1,
         pin_memory=True)
+    
+    oe_loader = torch.utils.data.DataLoader(dataset=cifar100.oe_set,
+        batch_size=config.batch_size//2,
+        drop_last=True,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    
 
 
     return train_loader, None, val_loader
@@ -83,20 +104,29 @@ def fashionmnist(config):
 def svhn(config):
     assert config.normal_class in range(10), "Set normal_class to 0-9."
 
-    fashionmnist = SVHN(root=config.data_path,
+    svhn = SVHN(root=config.data_path,
         normal_class=config.normal_class,
         hold_one_out=config.benchmark == "hold_one_out")
     
-
-    train_loader = torch.utils.data.DataLoader(dataset=fashionmnist.train_set,
+    cifar100 = SV_CIFAR100OE(root=config.data_path)
+    
+    train_loader = torch.utils.data.DataLoader(dataset=svhn.train_set,
         batch_size=config.batch_size//2,
         num_workers=1,
         pin_memory=True,
         shuffle=True)
-    val_loader = torch.utils.data.DataLoader(dataset=fashionmnist.test_set,
+    val_loader = torch.utils.data.DataLoader(dataset=svhn.test_set,
         batch_size=1,
         num_workers=1,
         pin_memory=True)
+    
+    oe_loader = torch.utils.data.DataLoader(dataset=cifar100.oe_set,
+        batch_size=config.batch_size//2,
+        drop_last=True,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    
 
 
     return train_loader, None, val_loader
@@ -108,6 +138,8 @@ def cifar100(config):
         normal_class=config.normal_class,
         hold_one_out=config.benchmark == "hold_one_out")
     
+    
+    cifar100 = CIFAR10OE(root=config.data_path)
 
     train_loader = torch.utils.data.DataLoader(dataset=fashionmnist.train_set,
         batch_size=config.batch_size//2,
@@ -118,6 +150,14 @@ def cifar100(config):
         batch_size=1,
         num_workers=1,
         pin_memory=True)
+    
+    oe_loader = torch.utils.data.DataLoader(dataset=cifar100.oe_set,
+        batch_size=config.batch_size//2,
+        drop_last=True,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    
 
 
     return train_loader, None, val_loader
@@ -130,6 +170,9 @@ def mvtec(config):
         hold_one_out=config.benchmark == "hold_one_out")
     
 
+
+    cifar100 = MV_CIFAR100OE(root=config.data_path)
+        
     train_loader = torch.utils.data.DataLoader(dataset=fashionmnist.train_set,
         batch_size=config.batch_size//2,
         num_workers=1,
@@ -139,6 +182,14 @@ def mvtec(config):
         batch_size=1,
         num_workers=1,
         pin_memory=True)
+    
+    oe_loader = torch.utils.data.DataLoader(dataset=cifar100.oe_set,
+        batch_size=config.batch_size//2,
+        drop_last=True,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=True)
+    
 
 
     return train_loader, None, val_loader

@@ -1,5 +1,5 @@
 import pandas as pd
-from Attack import fgsm, pgd
+from Attack import fgsm, pgd,attack_pgd
 from util.parser import get_default_parser
 from util.benchmark import fashionmnist
 from util.benchmark import mnist
@@ -78,7 +78,7 @@ def main():
     log.legend()
 
     # for epoch in range(config.num_epochs):
-    for epoch in range(40):
+    for epoch in range(0):
         for i, batch in enumerate(zip(train_loader, oe_loader)):
 
             f.train()
@@ -105,24 +105,32 @@ def main():
             log.update("loss", l.item(), x.size(0))
             log.report(which=["time", "loss"], epoch=epoch, batch_id=i)
             
-            torch.save(f, 'model.pth')
+        
 
         sched.step()
+        
+        torch.save(f, 'model.pth')
         # newline(f=out)
 
         # labels_scores = []
 
+    
+    
     mine_result = {}
     mine_result['Attack_Type'] = []
     mine_result['Attack_Target'] = []
     mine_result['ADV_AUC'] = []
 
     
-    if os.path.isfile('model.pth'):
-        f = torch.load('model.pth')
+    if os.path.isfile('/content/model.pth'):
+        f = torch.load('/content/model.pth')
     
     for att_type in ['fgsm', 'pgd']:
         for att_target in ['clear', 'normal', 'anomal', 'both']:
+            
+            print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')
+
+            
             auc = testModel(f, val_loader, att_type, att_target)
 
             mine_result['Attack_Type'].append(att_type)

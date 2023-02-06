@@ -35,16 +35,21 @@ def main():
 
     if config.dataset == "cifar10":
         train_loader, oe_loader, val_loader = cifar10(config)
+        alpha=0.03131072223186493
     elif config.dataset == "mnist":
         train_loader, _, val_loader = mnist(config)
+        alpha=0.025456469506025314
     elif config.dataset == "fashionmnist":
         train_loader, _, val_loader = fashionmnist(config)
+        alpha=0.022218521684408188
 
     elif config.dataset == "svhn":
         train_loader, _, val_loader = svhn(config)
+        alpha=0.029434230439442433
 
     elif config.dataset == "cifar100":
         train_loader, _, val_loader = cifar100(config)
+        alpha=0.029434850439429283
 
     elif config.dataset == "mvtec":
         train_loader, _, val_loader = mvtec(config)
@@ -124,6 +129,7 @@ def main():
     
     if os.path.isfile('/content/model.pth'):
         f = torch.load('/content/model.pth')
+        print("\nModel Loaded!\n")
     
     for att_type in ['fgsm', 'pgd']:
         for att_target in ['clear', 'normal', 'anomal', 'both']:
@@ -131,7 +137,7 @@ def main():
             print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')
 
             
-            auc = testModel(f, val_loader, att_type, att_target)
+            auc = testModel(f, val_loader, att_type, att_target,alpha=alpha)
 
             mine_result['Attack_Type'].append(att_type)
             mine_result['Attack_Target'].append(att_target)
@@ -142,7 +148,7 @@ def main():
                 './', f'Results_Class_{config.normal_class}.csv'), index=False)
 
 
-def testModel(f, val_loader, attack_type='fgsm', attack_target='clean'):
+def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.01):
 
     labels_arr = []
     scores_arr = []
@@ -165,10 +171,10 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean'):
 
         if shouldBeAttacked == True:
             if attack_type == 'fgsm':
-                adv_delta = fgsm(f, x, 0.1)
+                adv_delta = fgsm(f, x, 8/255)
 
             if attack_type == 'pgd':
-                adv_delta = attack_pgd(f, x, 0.3,0.01, 10)
+                adv_delta = attack_pgd(f, x, 8/255 , alpha, 10)
 
             x = x+adv_delta if labels == 0 else x-adv_delta
 

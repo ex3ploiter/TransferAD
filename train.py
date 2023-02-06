@@ -144,8 +144,8 @@ def main():
             mine_result['ADV_AUC'].append(auc)
 
             df = pd.DataFrame(mine_result)
-            df.to_csv(os.path.join(
-                './', f'Results_Class_{config.normal_class}.csv'), index=False)
+            # df.to_csv(os.path.join('./', f'Results_Class_{config.normal_class}.csv'), index=False)
+            df.to_csv(os.path.join('./',f'Results_DeepSAD_{config.dataset}_Class_{config.normal_class}.csv'), index=False)
 
 
 def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.01):

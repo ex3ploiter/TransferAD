@@ -53,7 +53,8 @@ def main():
 
     elif config.dataset == "mvtec":
         train_loader, _, val_loader = mvtec(config)
-
+        alpha=0.017563117668032646
+        
     else:
         raise NotImplementedError
 

@@ -84,7 +84,7 @@ def main():
     log.legend()
 
     # for epoch in range(config.num_epochs):
-    for epoch in range(0):
+    for epoch in range(30):
         for i, batch in enumerate(zip(train_loader, oe_loader)):
 
             f.train()
@@ -114,8 +114,9 @@ def main():
         
 
         sched.step()
+        print(f"Epoch {epoch}")
         
-        torch.save(f, 'model.pth')
+        # torch.save(f, '/content/model.pth')
         # newline(f=out)
 
         # labels_scores = []
@@ -128,9 +129,9 @@ def main():
     mine_result['ADV_AUC'] = []
 
     
-    if os.path.isfile('/content/model.pth'):
-        f = torch.load('/content/model.pth')
-        print("\nModel Loaded!\n")
+    # if os.path.isfile('/content/model.pth'):
+    #     f = torch.load('/content/model.pth')
+    #     print("\nModel Loaded!\n")
     
     for att_type in ['fgsm', 'pgd']:
         for att_target in ['clear', 'normal', 'anomal', 'both']:

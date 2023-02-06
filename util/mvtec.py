@@ -30,13 +30,13 @@ class MVTec(torch.utils.data.Dataset):
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize((0.1307, 0.1307, 0.1307), (0.3081, 0.3081, 0.3081))]
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]
 
         test_transform = [
           torchvision.transforms.Grayscale(num_output_channels=3),
           transforms.Resize(img_size),
             transforms.ToTensor(),
-            transforms.Normalize((0.1307, 0.1307, 0.1307), (0.3081, 0.3081, 0.3081))]
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)

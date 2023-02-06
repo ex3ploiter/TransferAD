@@ -66,7 +66,7 @@ def mnist(config):
     
     
 
-    return train_loader, None, val_loader
+    return train_loader, oe_loader, val_loader
 
 
 
@@ -98,7 +98,7 @@ def fashionmnist(config):
     
 
 
-    return train_loader, None, val_loader
+    return train_loader, oe_loader, val_loader
 
 
 def svhn(config):
@@ -129,7 +129,7 @@ def svhn(config):
     
 
 
-    return train_loader, None, val_loader
+    return train_loader, oe_loader, val_loader
 
 def cifar100(config):
     assert config.normal_class in range(10), "Set normal_class to 0-9."
@@ -160,7 +160,7 @@ def cifar100(config):
     
 
 
-    return train_loader, None, val_loader
+    return train_loader, oe_loader, val_loader
 
 def mvtec(config):
     assert config.normal_class in range(15), "Set normal_class to 0-9."
@@ -192,5 +192,5 @@ def mvtec(config):
     
 
 
-    return train_loader, None, val_loader
+    return train_loader, oe_loader, val_loader
 

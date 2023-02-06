@@ -70,7 +70,7 @@ class FM_CIFAR100OE(torch.utils.data.Dataset):
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize((0.491373, 0.482353, 0.446667), (0.247059, 0.243529, 0.261569)),
-            transforms.Grayscale(num_output_channels=1)])
+            ])
 
         dataset = torchvision.datasets.CIFAR100(root=root,
             train=True,

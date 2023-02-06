@@ -78,7 +78,7 @@ def main():
     log.legend()
 
     # for epoch in range(config.num_epochs):
-    for epoch in range(0):
+    for epoch in range(40):
         for i, batch in enumerate(zip(train_loader, oe_loader)):
 
             f.train()
@@ -104,6 +104,8 @@ def main():
             log.update("time", time.time() - t)
             log.update("loss", l.item(), x.size(0))
             log.report(which=["time", "loss"], epoch=epoch, batch_id=i)
+            
+            torch.save(f, 'model.pth')
 
         sched.step()
         # newline(f=out)
@@ -115,6 +117,10 @@ def main():
     mine_result['Attack_Target'] = []
     mine_result['ADV_AUC'] = []
 
+    
+    if os.path.isfile('model.pth'):
+        f = torch.load('model.pth')
+    
     for att_type in ['fgsm', 'pgd']:
         for att_target in ['clear', 'normal', 'anomal', 'both']:
             auc = testModel(f, val_loader, att_type, att_target)

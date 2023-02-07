@@ -35,8 +35,8 @@ class MVTec(torch.utils.data.Dataset):
         test_transform = [
           torchvision.transforms.Grayscale(num_output_channels=3),
           transforms.Resize(img_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]
+            transforms.ToTensor()]
+            # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)

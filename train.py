@@ -117,7 +117,7 @@ def main():
         sched.step()
         print(f"Epoch {epoch}")
         
-        # torch.save(f, '/content/model.pth')
+        torch.save(f, '/content/model.pth')
         # newline(f=out)
 
         # labels_scores = []
@@ -130,9 +130,9 @@ def main():
     mine_result['ADV_AUC'] = []
 
     
-    # if os.path.isfile('/content/model.pth'):
-    #     f = torch.load('/content/model.pth')
-    #     print("\nModel Loaded!\n")
+    if os.path.isfile('/content/model.pth'):
+        f = torch.load('/content/model.pth')
+        print("\nModel Loaded!\n")
     
     for att_type in ['fgsm', 'pgd']:
         for att_target in ['clear', 'normal', 'anomal', 'both']:

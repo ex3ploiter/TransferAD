@@ -178,10 +178,10 @@ def main():
         f = torch.load(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')
         print("\nModel Loaded!\n")
     
-    # for att_type in ['fgsm', 'pgd']:
-    for att_type in ['pgd']:
-        # for att_target in ['clear', 'normal', 'anomal', 'both']:
-        for att_target in [ 'normal', 'anomal', 'both']:
+    for att_type in ['fgsm', 'pgd']:
+    # for att_type in ['pgd']:
+        for att_target in ['clear', 'normal', 'anomal', 'both']:
+        # for att_target in [ 'normal', 'anomal', 'both']:
         # for att_target in [ 'both']:
             
             print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')

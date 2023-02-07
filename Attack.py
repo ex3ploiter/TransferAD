@@ -38,7 +38,7 @@ def pgd(model, inputs, epsilon, alpha, num_iter):
 def clamp(X, lower_limit, upper_limit):
     return torch.max(torch.min(X, upper_limit), lower_limit)
 
-def attack_pgd(model, X, epsilon=8/255, alpha=2/255, attack_iters=10, restarts=1, norm="l_inf"):
+def attack_pgd(model, X, epsilon=8/255, alpha=2/255, attack_iters=10, restarts=1, norm="l_inf",normal_obj=None):
     max_loss = torch.zeros(X.shape[0]).to(device)
     max_delta = torch.zeros_like(X).to(device)
     for _ in range(restarts):
@@ -75,6 +75,6 @@ def attack_pgd(model, X, epsilon=8/255, alpha=2/255, attack_iters=10, restarts=1
     return max_delta.detach()
 
 
-def getScore(model,X,delta):
-    scores = torch.sigmoid(model(X+delta)).squeeze()  
+def getScore(model,X,delta,normal_obj):
+    scores = torch.sigmoid(model(normal_obj.normalize(X+delta))).squeeze()
     return scores

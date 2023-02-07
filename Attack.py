@@ -8,11 +8,11 @@ lower_limit = 0
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
-def fgsm(model, inputs,epsilon):
+def fgsm(model, inputs,epsilon,normal_obj):
     """ Construct FGSM adversarial examples on the examples X"""
     delta = torch.zeros_like(inputs, requires_grad=True)
     
-    scores = torch.sigmoid(model(inputs+delta)).squeeze()
+    scores = torch.sigmoid(model(normal_obj.normalize(inputs+delta))).squeeze()
 
     scores.backward()
 

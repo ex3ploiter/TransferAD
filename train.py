@@ -217,7 +217,7 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
 
         if shouldBeAttacked == True:
             if attack_type == 'fgsm':
-                adv_delta = fgsm(f, x, 8/255)
+                adv_delta = fgsm(f, x, 8/255,normal_obj)
 
             if attack_type == 'pgd':
                 adv_delta = attack_pgd(f, x, 8/255 , alpha, 10)

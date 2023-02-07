@@ -68,7 +68,7 @@ def attack_pgd(model, X, epsilon=8/255, alpha=2/255, attack_iters=10, restarts=1
             delta.grad.zero_()
 
         
-        all_loss = getScore(model,X,delta)
+        all_loss = getScore(model,X,delta,normal_obj=normal_obj)
         
         max_delta[all_loss >= max_loss] = delta.detach()[all_loss >= max_loss]
         max_loss = torch.max(max_loss, all_loss)

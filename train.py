@@ -85,7 +85,7 @@ def main():
     log.legend()
 
     # for epoch in range(config.num_epochs):
-    for epoch in range(50):
+    for epoch in range(10):
         for i, batch in enumerate(zip(train_loader, oe_loader)):
 
             f.train()

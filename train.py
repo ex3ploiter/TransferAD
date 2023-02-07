@@ -36,20 +36,44 @@ def main():
     if config.dataset == "cifar10":
         train_loader, oe_loader, val_loader = cifar10(config)
         alpha=0.03131072223186493
+        
+        ds_mean = (0.4914, 0.4822, 0.4465) 
+        ds_std = (0.2471, 0.2435, 0.2616) 
+
+        
     elif config.dataset == "mnist":
         train_loader, oe_loader, val_loader = mnist(config)
         alpha=0.025456469506025314
+        
+        ds_mean = (0.1307, 0.1307, 0.1307)
+        ds_std = (0.3081, 0.3081, 0.3081)
+
+        
     elif config.dataset == "fashionmnist":
         train_loader, oe_loader, val_loader = fashionmnist(config)
         alpha=0.022218521684408188
+        
+        ds_mean =(0.2859, 0.2859, 0.2859)
+        ds_std = (0.3530, 0.3530, 0.3530)
+
 
     elif config.dataset == "svhn":
         train_loader, oe_loader, val_loader = svhn(config)
-        alpha=0.029434230439442433
+        alpha=0.
+        
+        
+        ds_mean =(0.491373, 0.482353, 0.446667)
+        ds_std =(0.247059, 0.243529, 0.261569)
+
+        
 
     elif config.dataset == "cifar100":
         train_loader, oe_loader, val_loader = cifar100(config)
         alpha=0.029434850439429283
+
+        ds_mean =(0.491373, 0.482353, 0.446667)
+        ds_std =(0.247059, 0.243529, 0.261569)
+
 
     elif config.dataset == "mvtec":
         config.batch_size=16
@@ -59,6 +83,13 @@ def main():
     else:
         raise NotImplementedError
 
+    
+    mu = torch.tensor(ds_mean).view(3,1,1).cuda()
+    std = torch.tensor(ds_std).view(3,1,1).cuda()
+    
+    normal_obj=normalizC(mu,std)
+
+    
     save_model_info(config, file=out)
 
     f = resnet26(config, 1)
@@ -149,7 +180,7 @@ def main():
             print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')
 
             
-            auc = testModel(f, val_loader, att_type, att_target,alpha=alpha)
+            auc = testModel(f, val_loader, attack_type=att_type, attack_target=att_target,alpha=alpha,normal_obj=normal_obj)
 
             mine_result['Attack_Type'].append(att_type)
             mine_result['Attack_Target'].append(att_target)
@@ -162,7 +193,7 @@ def main():
             df.to_csv(os.path.join('./',f'Results_ADIB_{config.dataset}_Class_{config.normal_class}.csv'), index=False)
 
 
-def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.01):
+def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.01,normal_obj=None):
 
     labels_arr = []
     scores_arr = []
@@ -193,14 +224,14 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
 
             
             attacked=True
-            temp_score=getScore(f,x)
+            temp_score=getScore(f,normal_obj.normalize(x))
             
             x = x+adv_delta if labels == 0 else x-adv_delta
             
             
 
         
-        scores=getScore(f,x)
+        scores=getScore(f,normal_obj.normalize(x))
         
         # if attacked==True:
         #     print('label : ', labels)
@@ -221,14 +252,13 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
     return auc
 
 
-cifar10_mean = (0.4914, 0.4822, 0.4465) # equals np.mean(train_set.train_data, axis=(0,1,2))/255
-cifar10_std = (0.2471, 0.2435, 0.2616) # equals np.std(train_set.train_data, axis=(0,1,2))/255
 
-mu = torch.tensor(cifar10_mean).view(3,1,1).cuda()
-std = torch.tensor(cifar10_std).view(3,1,1).cuda()
-
-def normalize(X):
-    return (X - mu)/std
+class normalizC:
+    def __init__(self,mu,std) -> None:
+        self.mu=mu 
+        self.std=std
+    def normalize(self,X):
+        return (X - self.mu)/self.std
 
 def getScore(f,x):
     scores = torch.sigmoid(f(x)).squeeze()

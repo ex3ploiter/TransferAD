@@ -153,7 +153,7 @@ def main():
         print(f"Epoch {epoch}")
         
         if config.train=='True':
-            torch.save(f, '/content/model.pth')
+            torch.save(f, './model.pth')
         
         
         # newline(f=out)
@@ -168,8 +168,8 @@ def main():
     mine_result['ADV_AUC'] = []
 
     
-    if os.path.isfile('/content/model.pth'):
-        f = torch.load('/content/model.pth')
+    if os.path.isfile('./model.pth'):
+        f = torch.load('./model.pth')
         print("\nModel Loaded!\n")
     
     for att_type in ['fgsm', 'pgd']:

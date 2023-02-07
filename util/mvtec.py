@@ -25,7 +25,6 @@ class MVTec(torch.utils.data.Dataset):
             self.normal_classes, self.outlier_classes = self.outlier_classes, self.normal_classes
 
         train_transform = [
-          torchvision.transforms.Grayscale(num_output_channels=3),
           transforms.Resize(img_size),
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
@@ -33,7 +32,6 @@ class MVTec(torch.utils.data.Dataset):
             transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]
 
         test_transform = [
-          torchvision.transforms.Grayscale(num_output_channels=3),
           transforms.Resize(img_size),
             transforms.ToTensor()]
             # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]

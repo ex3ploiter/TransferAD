@@ -27,8 +27,8 @@ class SVHN(torch.utils.data.Dataset):
 
         test_transform = [
           transforms.Resize(img_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.4309803921568628, 0.4301960784313726, 0.4462745098039216), (0.19647058823529412, 0.1984313725490196, 0.19921568627450978))]
+            transforms.ToTensor(),]
+            # transforms.Normalize((0.4309803921568628, 0.4301960784313726, 0.4462745098039216), (0.19647058823529412, 0.1984313725490196, 0.19921568627450978))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)

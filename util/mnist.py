@@ -29,8 +29,8 @@ class MNIST(torch.utils.data.Dataset):
         test_transform = [
           torchvision.transforms.Grayscale(num_output_channels=3),
           transforms.Resize(img_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.1307, 0.1307, 0.1307), (0.3081, 0.3081, 0.3081))]
+            transforms.ToTensor(),]
+            # transforms.Normalize((0.1307, 0.1307, 0.1307), (0.3081, 0.3081, 0.3081))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)

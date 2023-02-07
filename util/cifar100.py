@@ -25,8 +25,8 @@ class CIFAR100(torch.utils.data.Dataset):
             transforms.Normalize((0.491373, 0.482353, 0.446667), (0.247059, 0.243529, 0.261569))]
 
         test_transform = [transforms.Resize(img_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.491373, 0.482353, 0.446667), (0.247059, 0.243529, 0.261569))]
+            transforms.ToTensor(),]
+            # transforms.Normalize((0.491373, 0.482353, 0.446667), (0.247059, 0.243529, 0.261569))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)

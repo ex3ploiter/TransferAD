@@ -29,8 +29,8 @@ class FashionMNIST(torch.utils.data.Dataset):
         test_transform = [
           torchvision.transforms.Grayscale(num_output_channels=3),
           transforms.Resize(img_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530))]
+            transforms.ToTensor(),]
+            # transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)

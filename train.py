@@ -153,7 +153,8 @@ def main():
         print(f"Epoch {epoch}")
         
         if config.train=='True':
-            torch.save(f, './model.pth')
+            # torch.save(f, './model.pth')
+            torch.save(f, f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')
         
         
         # newline(f=out)
@@ -169,7 +170,8 @@ def main():
 
     
     if os.path.isfile('./model.pth'):
-        f = torch.load('./model.pth')
+        # f = torch.load('./model.pth')
+        f = torch.load(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')
         print("\nModel Loaded!\n")
     
     for att_type in ['fgsm', 'pgd']:

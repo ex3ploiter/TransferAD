@@ -86,7 +86,7 @@ def main():
     else:
         raise NotImplementedError
 
-    print(f"\n Dataset {config.dataset} , Normal Class {config.normal_class}\n")
+    print(f"\nDataset {config.dataset} , Normal Class {config.normal_class}\n")
     
     mu = torch.tensor(ds_mean).view(3,1,1).cuda()
     std = torch.tensor(ds_std).view(3,1,1).cuda()
@@ -187,7 +187,7 @@ def main():
             print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')
 
             
-            auc = testModel(f, val_loader, attack_type=att_type, attack_target=att_target,alpha=alpha,normal_obj=normal_obj)
+            auc = testModel(f, val_loader, attack_type=att_type, attack_target=att_target,alpha=alpha,epsilon=config.att_eps,normal_obj=normal_obj)
 
             mine_result['Attack_Type'].append(att_type)
             mine_result['Attack_Target'].append(att_target)
@@ -200,7 +200,7 @@ def main():
             df.to_csv(os.path.join('./',f'Results_ADIB_{config.dataset}_Class_{config.normal_class}.csv'), index=False)
 
 
-def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.01,normal_obj=None):
+def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',epsilon=8/255,alpha=0.01,normal_obj=None):
 
     labels_arr = []
     scores_arr = []
@@ -224,10 +224,10 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
 
         if shouldBeAttacked == True:
             if attack_type == 'fgsm':
-                adv_delta = fgsm(f, x, 8/255,normal_obj=normal_obj)
+                adv_delta = fgsm(f, x, epsilon,normal_obj=normal_obj)
 
             if attack_type == 'pgd':
-                adv_delta = attack_pgd(f, x, 8/255 , alpha, 10,normal_obj=normal_obj)
+                adv_delta = attack_pgd(f, x, epsilon , alpha, 10,normal_obj=normal_obj)
 
             
             attacked=True

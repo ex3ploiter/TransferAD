@@ -117,7 +117,7 @@ def main():
 
     # for epoch in range(config.num_epochs):
     
-    num_epoches=0 if config.train=='False' else 10
+    num_epoches=0 if config.train=='False' else 15
     
     
     for epoch in range(num_epoches):

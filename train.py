@@ -154,7 +154,7 @@ def main():
         
 
         sched.step()
-        print(f"Epoch {epoch/{num_epoches}} , loss : {l.item()}")
+        print(f"Epoch {epoch}/{num_epoches} , loss : {l.item()}")
         
         if config.train=='True':
             # torch.save(f, './model.pth')

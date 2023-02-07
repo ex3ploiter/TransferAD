@@ -177,7 +177,8 @@ def main():
     
     # for att_type in ['fgsm', 'pgd']:
     for att_type in ['pgd']:
-        for att_target in ['clear', 'normal', 'anomal', 'both']:
+        # for att_target in ['clear', 'normal', 'anomal', 'both']:
+        for att_target in [ 'normal', 'anomal', 'both']:
         # for att_target in [ 'both']:
             
             print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')

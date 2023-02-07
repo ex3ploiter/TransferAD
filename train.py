@@ -204,7 +204,7 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
         
         if attacked==True:
             print("Before :   ",temp_score)
-            print("After :   ",scores)
+            print("After :   ",scores,"\n")
         
         if i==60:
             return None

@@ -143,8 +143,8 @@ def main():
     
     # for att_type in ['fgsm', 'pgd']:
     for att_type in ['fgsm']:
-        # for att_target in ['clear', 'normal', 'anomal', 'both']:
-        for att_target in [ 'anomal']:
+        for att_target in ['clear', 'normal', 'anomal', 'both']:
+        # for att_target in [ 'both']:
             
             print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')
 
@@ -202,14 +202,15 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
         
         scores=getScore(f,x)
         
-        if attacked==True:
-            print("Before :   ",temp_score)
-            print("After :   ",scores)
-            print("delta :   ",temp_score-scores)
-            print("\n")
+        # if attacked==True:
+        #     print('label : ', labels)
+        #     print("Before :   ",temp_score)
+        #     print("After :   ",scores)
+        #     print("delta :   ",temp_score-scores)
+        #     print("\n")
         
-        if i==60:
-            return None
+        # if i==300:
+        #     return None
         
         labels_arr.append(labels.detach().cpu().item())
         scores_arr.append(scores.detach().cpu().item())
@@ -219,6 +220,15 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
 
     return auc
 
+
+cifar10_mean = (0.4914, 0.4822, 0.4465) # equals np.mean(train_set.train_data, axis=(0,1,2))/255
+cifar10_std = (0.2471, 0.2435, 0.2616) # equals np.std(train_set.train_data, axis=(0,1,2))/255
+
+mu = torch.tensor(cifar10_mean).view(3,1,1).cuda()
+std = torch.tensor(cifar10_std).view(3,1,1).cuda()
+
+def normalize(X):
+    return (X - mu)/std
 
 def getScore(f,x):
     scores = torch.sigmoid(f(x)).squeeze()

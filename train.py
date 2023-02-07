@@ -174,8 +174,8 @@ def main():
     
     for att_type in ['fgsm', 'pgd']:
     # for att_type in ['fgsm']:
-        for att_target in ['clear', 'normal', 'anomal', 'both']:
-        # for att_target in [ 'both']:
+        # for att_target in ['clear', 'normal', 'anomal', 'both']:
+        for att_target in [ 'both']:
             
             print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')
 
@@ -233,15 +233,15 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
         
         scores=getScore(f,normal_obj.normalize(x))
         
-        # if attacked==True:
-        #     print('label : ', labels)
-        #     print("Before :   ",temp_score)
-        #     print("After :   ",scores)
-        #     print("delta :   ",temp_score-scores)
-        #     print("\n")
+        if attacked==True:
+            print('label : ', labels)
+            print("Before :   ",temp_score)
+            print("After :   ",scores)
+            print("delta :   ",temp_score-scores)
+            print("\n")
         
-        # if i==300:
-        #     return None
+        if i==50:
+            return None
         
         labels_arr.append(labels.detach().cpu().item())
         scores_arr.append(scores.detach().cpu().item())

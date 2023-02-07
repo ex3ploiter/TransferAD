@@ -85,7 +85,11 @@ def main():
     log.legend()
 
     # for epoch in range(config.num_epochs):
-    for epoch in range(10):
+    
+    num_epoches=0 if config.train=='False' else 10
+    
+    
+    for epoch in range(num_epoches):
         for i, batch in enumerate(zip(train_loader, oe_loader)):
 
             f.train()
@@ -117,7 +121,10 @@ def main():
         sched.step()
         print(f"Epoch {epoch}")
         
-        # torch.save(f, '/content/model.pth')
+        if config.train=='True':
+            torch.save(f, '/content/model.pth')
+        
+        
         # newline(f=out)
 
         # labels_scores = []
@@ -149,7 +156,7 @@ def main():
             print(f'Adv Adverserial : {auc}')
 
             df = pd.DataFrame(mine_result)
-            # df.to_csv(os.path.join('./', f'Results_Class_{config.normal_class}.csv'), index=False)
+            
             df.to_csv(os.path.join('./',f'Results_ADIB_{config.dataset}_Class_{config.normal_class}.csv'), index=False)
 
 
@@ -157,6 +164,7 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
 
     labels_arr = []
     scores_arr = []
+    attacked=False
 
     for i, batch in enumerate(val_loader):
         x, labels = batch
@@ -181,10 +189,20 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
             if attack_type == 'pgd':
                 adv_delta = attack_pgd(f, x, 8/255 , alpha, 10)
 
-            # x = x+adv_delta if labels == 0 else x-adv_delta
-            x = x+adv_delta if labels == 0 else x+adv_delta
+            
+            attacked=True
+            temp_score=getScore(f,x)
+            
+            x = x+adv_delta if labels == 0 else x-adv_delta
+            
+            
 
-        scores = torch.sigmoid(f(x)).squeeze()
+        
+        scores=getScore(f,x)
+        
+        if attacked==True:
+            print("Before :   ",temp_score)
+            print("After :   ",scores)
 
         labels_arr.append(labels.detach().cpu().item())
         scores_arr.append(scores.detach().cpu().item())
@@ -193,6 +211,11 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',alpha=0.0
     auc  = roc_auc_score(labels_arr, scores_arr)
 
     return auc
+
+
+def getScore(f,x):
+    scores = torch.sigmoid(f(x)).squeeze()
+    return scores
 
 
 if __name__ == "__main__":

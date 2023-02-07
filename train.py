@@ -117,7 +117,7 @@ def main():
         sched.step()
         print(f"Epoch {epoch}")
         
-        torch.save(f, '/content/model.pth')
+        # torch.save(f, '/content/model.pth')
         # newline(f=out)
 
         # labels_scores = []

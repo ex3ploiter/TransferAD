@@ -83,6 +83,7 @@ def main():
     else:
         raise NotImplementedError
 
+    print(f"\n Dataset {config.dataset} , Normal Class {config.normal_class}"\n)
     
     mu = torch.tensor(ds_mean).view(3,1,1).cuda()
     std = torch.tensor(ds_std).view(3,1,1).cuda()
@@ -169,13 +170,13 @@ def main():
     mine_result['ADV_AUC'] = []
 
     
-    if os.path.isfile('./model.pth'):
+    if os.path.isfile(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth'):
         # f = torch.load('./model.pth')
         f = torch.load(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')
         print("\nModel Loaded!\n")
     
-    for att_type in ['fgsm', 'pgd']:
-    # for att_type in ['fgsm']:
+    # for att_type in ['fgsm', 'pgd']:
+    for att_type in ['pgd']:
         for att_target in ['clear', 'normal', 'anomal', 'both']:
         # for att_target in [ 'both']:
             

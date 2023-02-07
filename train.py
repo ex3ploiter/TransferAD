@@ -172,8 +172,8 @@ def main():
         f = torch.load('/content/model.pth')
         print("\nModel Loaded!\n")
     
-    # for att_type in ['fgsm', 'pgd']:
-    for att_type in ['fgsm']:
+    for att_type in ['fgsm', 'pgd']:
+    # for att_type in ['fgsm']:
         for att_target in ['clear', 'normal', 'anomal', 'both']:
         # for att_target in [ 'both']:
             

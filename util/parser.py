@@ -4,7 +4,7 @@ import argparse
 def get_default_parser():
     parser = argparse.ArgumentParser(description='transfer-ad')
     parser.add_argument('--batch_size', type=int, default=128)
-    parser.add_argument('--num_epochs', type=int, default=100)
+    parser.add_argument('--num_epochs', type=int, default=15)
 
     parser.add_argument('--ckpt_path', type=str, default="ckpt")
     parser.add_argument('--ckpt', action="store_true")

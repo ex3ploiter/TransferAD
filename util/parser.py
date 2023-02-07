@@ -22,5 +22,6 @@ def get_default_parser():
     parser.add_argument('--milestones', type=str, default="60,80")
     parser.add_argument('--momentum_sgd', type=float, default=0.9)
     parser.add_argument('--weight_decay', type=float, default=1.e-4)
+    parser.add_argument('--train', type=str, default='False')
     
     return parser

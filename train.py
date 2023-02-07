@@ -80,10 +80,13 @@ def main():
         train_loader, oe_loader, val_loader = mvtec(config)
         alpha=0.017563117668032646
         
+        ds_mean=(0.485, 0.456, 0.406)
+        ds_std=(0.229, 0.224, 0.225)
+        
     else:
         raise NotImplementedError
 
-    print(f"\n Dataset {config.dataset} , Normal Class {config.normal_class}"\n)
+    print(f"\n Dataset {config.dataset} , Normal Class {config.normal_class}\n")
     
     mu = torch.tensor(ds_mean).view(3,1,1).cuda()
     std = torch.tensor(ds_std).view(3,1,1).cuda()

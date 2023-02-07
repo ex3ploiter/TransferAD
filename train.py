@@ -145,6 +145,8 @@ def main():
             mine_result['Attack_Type'].append(att_type)
             mine_result['Attack_Target'].append(att_target)
             mine_result['ADV_AUC'].append(auc)
+            
+            print(f'Adv Adverserial : {auc}')
 
             df = pd.DataFrame(mine_result)
             # df.to_csv(os.path.join('./', f'Results_Class_{config.normal_class}.csv'), index=False)

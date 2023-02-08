@@ -223,7 +223,8 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',epsilon=8
 
         if shouldBeAttacked == True:
             if attack_type == 'fgsm':
-                adv_delta = fgsm(f, x, epsilon)
+                # adv_delta = fgsm(f, x, epsilon)
+                adv_delta = attack_pgd(f, x, epsilon , 1.25*epsilon , 10)
 
             if attack_type == 'pgd':
                 adv_delta = attack_pgd(f, x, epsilon , alpha, 10)

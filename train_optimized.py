@@ -233,19 +233,17 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
         adv_scores_arr.append(scores.detach().cpu().item())
         labels_arr.append(labels.detach().cpu().item())
     
-    normal_imgs_idx=np.argwhere(labels_arr==0)
-    anomal_imgs_idx=np.argwhere(labels_arr==1)
+    normal_imgs_idx=np.argwhere(np.array(labels_arr)==0).flatten().tolist()
+    anomal_imgs_idx=np.argwhere(np.array(labels_arr)==1).flatten().tolist()
     
     
     clear_auc=roc_auc_score(labels_arr, scores_arr)
-    normal_auc=roc_auc_score(labels_arr[normal_imgs_idx]+labels_arr[anomal_imgs_idx],adv_scores_arr[normal_imgs_idx]+scores_arr[anomal_imgs_idx])
-    anomal_auc=roc_auc_score(labels_arr[normal_imgs_idx]+labels_arr[anomal_imgs_idx],scores_arr[normal_imgs_idx]+adv_scores_arr[anomal_imgs_idx])
+    normal_auc=roc_auc_score(np.array(labels_arr)[normal_imgs_idx].tolist()+np.array(labels_arr)[anomal_imgs_idx].tolist(),np.array(adv_scores_arr)[normal_imgs_idx].tolist()+np.array(scores_arr)[anomal_imgs_idx].tolist())
+    anomal_auc=roc_auc_score(np.array(labels_arr)[normal_imgs_idx].tolist()+np.array(labels_arr)[anomal_imgs_idx].tolist(),np.array(scores_arr)[normal_imgs_idx].tolist()+np.array(adv_scores_arr)[anomal_imgs_idx].tolist())
     both_auc=roc_auc_score(labels_arr, adv_scores_arr)
     
     
     return clear_auc,normal_auc,anomal_auc,both_auc
-
-
 
 
 

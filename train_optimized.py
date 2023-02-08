@@ -16,6 +16,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torchvision
+import tqdm
 
 
 import functools
@@ -206,7 +207,9 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',epsilon=8
     scores_arr = []
     adv_scores_arr = []
 
-    for i, batch in enumerate(val_loader):
+    # for i, batch in enumerate(val_loader):
+    for (i, batch) in tqdm(val_loader, desc='Testing Adversarial'):
+        
         x, labels = batch
         x, labels = to_gpu(x, labels)
         f.eval()

@@ -17,8 +17,8 @@ def normalize(X):
     return (X - mu)/std
 
 
-def resnet26(config, num_classes):
-    net = ResNet(3*[4], num_classes, pre_relu=True, ra=config.model == "adra")
+def resnet26(config, num_classes,normal_obj):
+    net = ResNet(3*[4], num_classes, pre_relu=True, ra=config.model == "adra",normal_obj=normal_obj)
     
     if not os.path.isfile(config.params_path):
         gdown.download(PARAMS_URL, config.params_path, quiet=False)
@@ -106,7 +106,7 @@ class AdapterBlock(BasicBlock):
 
 
 class ResNet(nn.Module):
-    def __init__(self, nblocks, num_classes, pre_relu=True, ra=False):
+    def __init__(self, nblocks, num_classes, pre_relu=True, ra=False,normal_obj=None):
         super(ResNet, self).__init__()
 
         width = [64, 128, 256]
@@ -127,6 +127,8 @@ class ResNet(nn.Module):
         self.linears = nn.Linear(width[2], num_classes)
 
         self._init_weights()
+        
+        self.normal_obj=normal_obj
 
     def _make_layer(self, block, planes, nblocks, stride=1):
         shortcut = 0
@@ -164,7 +166,8 @@ class ResNet(nn.Module):
 
     def forward(self, x):
         
-        x=normalize(x)
+        # x=normalize(x)
+        x=self.normal_obj.normalize(x)
         
         
         if self.pre_ra is not None:

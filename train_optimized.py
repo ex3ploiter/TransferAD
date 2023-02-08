@@ -95,11 +95,11 @@ def main():
     std = torch.tensor(ds_std).view(3,1,1).cuda()
     
     
-
+    normal_obj=normalizC(mu,std)
     
     save_model_info(config, file=out)
 
-    f = resnet26(config, 1)
+    f = resnet26(config, 1,normal_obj=normal_obj)
     f.cuda()
 
     if config.model == "adib":
@@ -245,7 +245,12 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
     
     return clear_auc,normal_auc,anomal_auc,both_auc
 
-
+class normalizC:
+    def __init__(self,mu,std) -> None:
+        self.mu=mu 
+        self.std=std
+    def normalize(self,X):
+        return (X - self.mu)/self.std
 
 def getScore(f,x):
     scores = torch.sigmoid(f(x)).squeeze()

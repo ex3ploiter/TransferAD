@@ -187,7 +187,7 @@ def main():
             print(f'\n\nAttack Type: {att_type}\n\n')
 
             
-            clear_auc,normal_auc,anomal_auc,both_auc = testModel(f, val_loader, attack_type=att_type, attack_target=att_target,alpha=alpha,epsilon=config.att_eps)
+            clear_auc,normal_auc,anomal_auc,both_auc = testModel(f, val_loader, attack_type=att_type,alpha=alpha,epsilon=config.att_eps)
 
             mine_result['Attack_Type'].append(att_type)
             mine_result['Attack_Target'].append(['clean','normal','anomal','both'])
@@ -202,7 +202,7 @@ def main():
     df.to_csv(os.path.join('./',f'Results_ADIB_{config.dataset}_Class_{config.normal_class}.csv'), index=False)
 
 
-def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',epsilon=8/255,alpha=0.01):
+def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
     labels_arr = []
     scores_arr = []
     adv_scores_arr = []

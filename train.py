@@ -92,7 +92,7 @@ def main():
     mu = torch.tensor(ds_mean).view(3,1,1).cuda()
     std = torch.tensor(ds_std).view(3,1,1).cuda()
     
-    normal_obj=normalizC(mu,std)
+    
 
     
     save_model_info(config, file=out)
@@ -181,15 +181,12 @@ def main():
     
     
     for att_type in ['fgsm', 'pgd']:
-    # for att_type in ['pgd']:
         for att_target in ['clear', 'normal', 'anomal', 'both']:
-        # for att_target in [ 'normal', 'anomal', 'both']:
-        # for att_target in [ 'both']:
             
             print(f'\n\nAttack Type: {att_type} and Attack Target: {att_target}\n\n')
 
             
-            auc = testModel(f, val_loader, attack_type=att_type, attack_target=att_target,alpha=alpha,epsilon=config.att_eps,normal_obj=normal_obj)
+            auc = testModel(f, val_loader, attack_type=att_type, attack_target=att_target,alpha=alpha,epsilon=config.att_eps)
 
             mine_result['Attack_Type'].append(att_type)
             mine_result['Attack_Target'].append(att_target)
@@ -202,7 +199,7 @@ def main():
             df.to_csv(os.path.join('./',f'Results_ADIB_{config.dataset}_Class_{config.normal_class}.csv'), index=False)
 
 
-def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',epsilon=8/255,alpha=0.01,normal_obj=None):
+def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',epsilon=8/255,alpha=0.01):
 
     labels_arr = []
     scores_arr = []
@@ -226,21 +223,21 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',epsilon=8
 
         if shouldBeAttacked == True:
             if attack_type == 'fgsm':
-                adv_delta = fgsm(f, x, epsilon,normal_obj=normal_obj)
+                adv_delta = fgsm(f, x, epsilon)
 
             if attack_type == 'pgd':
-                adv_delta = attack_pgd(f, x, epsilon , alpha, 10,normal_obj=normal_obj)
+                adv_delta = attack_pgd(f, x, epsilon , alpha, 10)
 
             
             attacked=True
-            temp_score=getScore(f,normal_obj.normalize(x))
+            temp_score=getScore(f,x)
             
             x = x+adv_delta if labels == 0 else x-adv_delta
             
             
 
         
-        scores=getScore(f,normal_obj.normalize(x))
+        scores=getScore(f,x)
         
         # if attacked==True:
         #     print('label : ', labels)
@@ -262,12 +259,12 @@ def testModel(f, val_loader, attack_type='fgsm', attack_target='clean',epsilon=8
 
 
 
-class normalizC:
-    def __init__(self,mu,std) -> None:
-        self.mu=mu 
-        self.std=std
-    def normalize(self,X):
-        return (X - self.mu)/self.std
+# class normalizC:
+#     def __init__(self,mu,std) -> None:
+#         self.mu=mu 
+#         self.std=std
+#     def normalize(self,X):
+#         return (X - self.mu)/self.std
 
 def getScore(f,x):
     scores = torch.sigmoid(f(x)).squeeze()

@@ -23,12 +23,12 @@ class SVHN(torch.utils.data.Dataset):
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize((0.4309803921568628, 0.4301960784313726, 0.4462745098039216), (0.19647058823529412, 0.1984313725490196, 0.19921568627450978))]
+            transforms.Normalize((0.4377, 0.4438, 0.4728), (0.1980, 0.2010, 0.1970))]
 
         test_transform = [
           transforms.Resize(img_size),
-            transforms.ToTensor(),]
-            # transforms.Normalize((0.4309803921568628, 0.4301960784313726, 0.4462745098039216), (0.19647058823529412, 0.1984313725490196, 0.19921568627450978))]
+            transforms.ToTensor(),
+            transforms.Normalize((0.4377, 0.4438, 0.4728), (0.1980, 0.2010, 0.1970))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)
@@ -67,7 +67,7 @@ class SV_CIFAR100OE(torch.utils.data.Dataset):
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize((0.4309803921568628, 0.4301960784313726, 0.4462745098039216), (0.19647058823529412, 0.1984313725490196, 0.19921568627450978))])
+            transforms.Normalize((0.4377, 0.4438, 0.4728), (0.1980, 0.2010, 0.1970))])
 
         dataset = torchvision.datasets.CIFAR100(root=root,
             train=True,

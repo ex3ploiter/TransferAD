@@ -8,11 +8,11 @@ lower_limit = 0
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
-def fgsm(model, inputs,epsilon,normal_obj):
+def fgsm(model, inputs,epsilon):
     """ Construct FGSM adversarial examples on the examples X"""
     delta = torch.zeros_like(inputs, requires_grad=True)
     
-    scores = torch.sigmoid(model(normal_obj.normalize(inputs+delta))).squeeze()
+    scores = torch.sigmoid(model(inputs+delta)).squeeze()
 
     scores.backward()
 
@@ -68,13 +68,13 @@ def attack_pgd(model, X, epsilon=8/255, alpha=2/255, attack_iters=10, restarts=1
             delta.grad.zero_()
 
         
-        all_loss = getScore(model,X,delta,normal_obj=normal_obj)
+        all_loss = getScore(model,X,delta)
         
         max_delta[all_loss >= max_loss] = delta.detach()[all_loss >= max_loss]
         max_loss = torch.max(max_loss, all_loss)
     return max_delta.detach()
 
 
-def getScore(model,X,delta,normal_obj):
-    scores = torch.sigmoid(model(normal_obj.normalize(X+delta))).squeeze()
+def getScore(model,X,delta):
+    scores = torch.sigmoid(model(X+delta)).squeeze()
     return scores

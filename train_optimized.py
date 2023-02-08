@@ -209,7 +209,7 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
     adv_scores_arr = []
 
     # for i, batch in enumerate(val_loader):
-    for (i, batch) in tqdm(val_loader, desc='Testing Adversarial'):
+    for (i, batch) in enumerate(tqdm(val_loader, desc='Testing Adversarial')):
         
         x, labels = batch
         x, labels = to_gpu(x, labels)

@@ -16,7 +16,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torchvision
-import tqdm
+from tqdm import tqdm
+
 
 
 import functools

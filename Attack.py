@@ -20,18 +20,7 @@ def fgsm(model, inputs,epsilon):
     return epsilon * delta.grad.detach().sign()
 
 
-def pgd(model, inputs, epsilon, alpha, num_iter):
 
-    delta = torch.zeros_like(inputs, requires_grad=True)
-    for t in range(num_iter):
-        
-
-        scores = torch.sigmoid(model(inputs+delta)).squeeze()  
-        scores.backward()
-        
-        delta.data = (delta + inputs.shape[0]*alpha*delta.grad.data).clamp(-epsilon,epsilon)
-        delta.grad.zero_()
-    return delta.detach()
 
 
 

@@ -7,11 +7,11 @@ import torch.nn.functional as F
 
 PARAMS_URL = "https://drive.google.com/uc?id=1uRmyJfs5OW2s0USoue6WbPdr_04MNOFI"
 
-cifar10_mean = (0.1307, 0.1307,0.1307)
-cifar10_std = (0.3081,0.3081,0.3081) 
+mnist_mean = (0.1307, 0.1307,0.1307)
+mnist_std = (0.3081,0.3081,0.3081) 
 
-mu = torch.tensor(cifar10_mean).view(3,1,1).cuda()
-std = torch.tensor(cifar10_std).view(3,1,1).cuda()
+mu = torch.tensor(mnist_mean).view(3,1,1).cuda()
+std = torch.tensor(mnist_std).view(3,1,1).cuda()
 
 def normalize(X):
     return (X - mu)/std

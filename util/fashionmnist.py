@@ -23,14 +23,14 @@ class FashionMNIST(torch.utils.data.Dataset):
           transforms.Resize(img_size),
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530))]
+            transforms.ToTensor(),]
+            # transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530))]
 
         test_transform = [
           torchvision.transforms.Grayscale(num_output_channels=3),
           transforms.Resize(img_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530))]
+            transforms.ToTensor(),]
+            # transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530))]
 
         train_transform = transforms.Compose(train_transform)
         test_transform = transforms.Compose(test_transform)
@@ -69,7 +69,7 @@ class FM_CIFAR100OE(torch.utils.data.Dataset):
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530)),
+            # transforms.Normalize((0.2859, 0.2859, 0.2859), (0.3530, 0.3530, 0.3530)),
             ])
 
         dataset = torchvision.datasets.CIFAR100(root=root,

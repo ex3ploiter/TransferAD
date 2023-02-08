@@ -1,5 +1,5 @@
 import pandas as pd
-from Attack import fgsm, pgd,attack_pgd
+from Attack import fgsm,attack_pgd
 from util.parser import get_default_parser
 from util.benchmark import fashionmnist
 from util.benchmark import mnist

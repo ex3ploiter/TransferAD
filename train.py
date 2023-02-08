@@ -17,6 +17,7 @@ import torch
 import torch.nn as nn
 import torchvision
 
+
 import functools
 print = functools.partial(print, flush=True)
 
@@ -177,6 +178,7 @@ def main():
         # f = torch.load('./model.pth')
         f = torch.load(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')
         print("\nModel Loaded!\n")
+    
     
     for att_type in ['fgsm', 'pgd']:
     # for att_type in ['pgd']:

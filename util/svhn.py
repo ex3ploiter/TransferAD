@@ -67,7 +67,7 @@ class SV_CIFAR100OE(torch.utils.data.Dataset):
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize((0.491373, 0.482353, 0.446667), (0.247059, 0.243529, 0.261569))])
+            transforms.Normalize((0.4309803921568628, 0.4301960784313726, 0.4462745098039216), (0.19647058823529412, 0.1984313725490196, 0.19921568627450978))]
 
         dataset = torchvision.datasets.CIFAR100(root=root,
             train=True,

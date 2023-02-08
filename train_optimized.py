@@ -223,7 +223,7 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
             adv_delta = attack_pgd(f, x, epsilon , 1.25*epsilon , 1)
 
         if attack_type == 'pgd':
-            adv_delta = attack_pgd(f, x, epsilon , alpha, 10)
+            adv_delta = attack_pgd(f, x, epsilon , 2/255 , 10)
 
         x = x+adv_delta if labels == 0 else x-adv_delta
         x=torch.clamp(x, min=0, max=1)

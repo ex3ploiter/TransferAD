@@ -43,7 +43,7 @@ def attack_pgd(model, X, epsilon=8/255, alpha=2/255, attack_iters=10, restarts=1
             index = slice(None,None,None)
             if not isinstance(index, slice) and len(index) == 0:
                 break
-            loss = getScore(model,X,delta,normal_obj)
+            loss = getScore(model,X,delta)
             loss.backward()
             
             grad = delta.grad.detach()

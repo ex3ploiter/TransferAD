@@ -229,12 +229,12 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
 
             x = x+adv_delta if labels == 0 else x-adv_delta
             x=torch.clamp(x, min=0, max=1)
-            scores=getScore(f,x)
+            adv_scores=getScore(f,x)
         else:
-            scores=no_adv_score
+            adv_scores=no_adv_score
         
         scores_arr.append(no_adv_score.detach().cpu().item())
-        adv_scores_arr.append(scores.detach().cpu().item())
+        adv_scores_arr.append(adv_scores.detach().cpu().item())
         labels_arr.append(labels.detach().cpu().item())
     
     normal_imgs_idx=np.argwhere(np.array(labels_arr)==0).flatten().tolist()

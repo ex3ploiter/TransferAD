@@ -221,6 +221,7 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         
         no_adv_score=getScore(f,x)
         
+        attack_type='pgd'
         
         if just_clear=='False':
         

@@ -48,11 +48,7 @@ class FGSM(Attack):
         
         outputs=getScore(self.model,images)
 
-        print("\n\n salamxaxa11 \n\n")
-
-        cost = +loss(outputs, labels.float())
-
-        print("\n\n salamxaxa21 \n\n")
+        cost = +loss(outputs.unsqueeze(0), labels.float())
         
         # outputs = self.get_logits(images)
 
@@ -63,21 +59,16 @@ class FGSM(Attack):
         #     cost = loss(outputs, labels)
 
         # Update adversarial images
-        print("\n\n salamxaxa1 \n\n")
         grad = torch.autograd.grad(cost, images,
                                    retain_graph=False, create_graph=False)[0]
 
-        
-        print("\n\n salamxaxa2 \n\n")
         adv_images = images + self.eps*grad.sign()
         adv_images = torch.clamp(adv_images, min=0, max=1).detach()
 
         return adv_images
     
 def getScore(f,x):
-    print("sala.  " , x.shape)
     scores = torch.sigmoid(f(x)).squeeze()
-    
     return scores
 
     

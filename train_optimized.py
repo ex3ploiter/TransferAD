@@ -179,7 +179,7 @@ def main():
     mine_result['Attack_Target'] = []
     mine_result['ADV_AUC'] = []
     mine_result['setting'] = []
-    mine_result['setting'].extend(config.att_eps,alpha)
+    
     
     if os.path.isfile(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth'):
         # f = torch.load('./model.pth')
@@ -198,6 +198,7 @@ def main():
             mine_result['Attack_Type'].extend([att_type,att_type,att_type,att_type])
             mine_result['Attack_Target'].extend(['clean','normal','anomal','both'])
             mine_result['ADV_AUC'].extend([clear_auc,normal_auc,anomal_auc,both_auc])
+            mine_result['setting'].extend([{'Dataset Name': config.dataset},{'Epsilon': config.att_eps},{'Alpha': alpha},{'Num Epoches': num_epoches}])
             
             print(f'Adv Adverserial Clean: {clear_auc}')
             print(f'Adv Adverserial Normal: {normal_auc}')

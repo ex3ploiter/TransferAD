@@ -32,7 +32,7 @@ class FGSM(Attack):
         
         self.model=model
 
-    def forward(self, images,labels,semi_targets,c,eta,eps):
+    def forward(self, images,labels):
         r"""
         Overridden.
         """

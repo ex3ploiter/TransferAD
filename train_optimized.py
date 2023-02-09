@@ -62,7 +62,7 @@ def main():
 
     elif config.dataset == "svhn":
         train_loader, oe_loader, val_loader = svhn(config)
-        alpha=0.
+        alpha=0.02831072223186493
         
         
         ds_mean =(0.491373, 0.482353, 0.446667)
@@ -190,9 +190,9 @@ def main():
             
             clear_auc,normal_auc,anomal_auc,both_auc = testModel(f, val_loader, attack_type=att_type,alpha=alpha,epsilon=config.att_eps)
 
-            mine_result['Attack_Type'].append(att_type)
-            mine_result['Attack_Target'].append(['clean','normal','anomal','both'])
-            mine_result['ADV_AUC'].append([clear_auc,normal_auc,anomal_auc,both_auc])
+            mine_result['Attack_Type'].extend([att_type,att_type,att_type,att_type])
+            mine_result['Attack_Target'].extend(['clean','normal','anomal','both'])
+            mine_result['ADV_AUC'].extend([clear_auc,normal_auc,anomal_auc,both_auc])
             
             print(f'Adv Adverserial Clean: {clear_auc}')
             print(f'Adv Adverserial Normal: {normal_auc}')

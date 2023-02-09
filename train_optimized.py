@@ -218,7 +218,7 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         no_adv_score=getScore(f,x)
         
         
-        if just_clear==False:
+        if just_clear=='False':
         
             if attack_type == 'fgsm':
                 # adv_delta = fgsm(f, x, epsilon)

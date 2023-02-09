@@ -188,7 +188,7 @@ def main():
             print(f'\n\nAttack Type: {att_type}\n\n')
 
             
-            clear_auc,normal_auc,anomal_auc,both_auc = testModel(f, val_loader, attack_type=att_type,alpha=alpha,epsilon=config.att_eps)
+            clear_auc,normal_auc,anomal_auc,both_auc = testModel(f, val_loader, attack_type=att_type,alpha=alpha,epsilon=config.att_eps,just_clear=config.just_clear)
 
             mine_result['Attack_Type'].extend([att_type,att_type,att_type,att_type])
             mine_result['Attack_Target'].extend(['clean','normal','anomal','both'])
@@ -203,7 +203,7 @@ def main():
     df.to_csv(os.path.join('./',f'Results_ADIB_{config.dataset}_Class_{config.normal_class}.csv'), index=False)
 
 
-def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
+def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_clear=True):
     labels_arr = []
     scores_arr = []
     adv_scores_arr = []
@@ -218,16 +218,20 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
         no_adv_score=getScore(f,x)
         
         
-        if attack_type == 'fgsm':
-            # adv_delta = fgsm(f, x, epsilon)
-            adv_delta = attack_pgd(f, x, epsilon , 1.25*epsilon , 1)
+        if just_clear==False:
+        
+            if attack_type == 'fgsm':
+                # adv_delta = fgsm(f, x, epsilon)
+                adv_delta = attack_pgd(f, x, epsilon , 1.25*epsilon , 1)
 
-        if attack_type == 'pgd':
-            adv_delta = attack_pgd(f, x, epsilon , 2/255 , 10)
+            if attack_type == 'pgd':
+                adv_delta = attack_pgd(f, x, epsilon , 2/255 , 10)
 
-        x = x+adv_delta if labels == 0 else x-adv_delta
-        x=torch.clamp(x, min=0, max=1)
-        scores=getScore(f,x)
+            x = x+adv_delta if labels == 0 else x-adv_delta
+            x=torch.clamp(x, min=0, max=1)
+            scores=getScore(f,x)
+        else:
+            scores=no_adv_score
         
         scores_arr.append(no_adv_score.detach().cpu().item())
         adv_scores_arr.append(scores.detach().cpu().item())

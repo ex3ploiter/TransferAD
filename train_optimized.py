@@ -18,6 +18,9 @@ import torch.nn as nn
 import torchvision
 from tqdm import tqdm
 
+from .fgsm import FGSM
+from .pgd import PGD
+
 
 
 import functools
@@ -223,14 +226,22 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         
             if attack_type == 'fgsm':
                 # adv_delta = fgsm(f, x, epsilon)
-                adv_delta = attack_pgd(f, x,epsilon= epsilon ,alpha= 1.25*epsilon ,attack_iters= 1)
+                # adv_delta = attack_pgd(f, x,epsilon= epsilon ,alpha= 1.25*epsilon ,attack_iters= 1)
+                
+                attack = FGSM(f, eps=epsilon)
+                adv_images = attack(x,labels)
 
             if attack_type == 'pgd':
-                adv_delta = attack_pgd(f, x, epsilon=epsilon ,alpha= 2/255 ,attack_iters= 10)
+                # adv_delta = attack_pgd(f, x, epsilon=epsilon ,alpha= 2/255 ,attack_iters= 10)
+                
+                attack = PGD(f, eps=epsilon, alpha=alpha, steps=10, random_start=True)
+                adv_images = attack(x, labels)
+                
 
-            x = x+adv_delta if labels == 0 else x-adv_delta
-            x=torch.clamp(x, min=0, max=1)
-            adv_scores=getScore(f,x)
+            # x = x+adv_delta if labels == 0 else x-adv_delta
+            # x=torch.clamp(x, min=0, max=1)
+            
+            adv_scores=getScore(f,adv_images)
         else:
             adv_scores=no_adv_score
         

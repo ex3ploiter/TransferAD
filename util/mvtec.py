@@ -28,8 +28,8 @@ class MVTec(torch.utils.data.Dataset):
           transforms.Resize(img_size),
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]
+            transforms.ToTensor(),]
+            # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]
 
         test_transform = [
           transforms.Resize(img_size),
@@ -113,8 +113,8 @@ class MV_CIFAR100OE(torch.utils.data.Dataset):
             transforms.Resize(img_size),
             transforms.RandomCrop(img_size, padding=4),
             transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize((0.491373, 0.482353, 0.446667), (0.247059, 0.243529, 0.261569))])
+            transforms.ToTensor(),]
+            # transforms.Normalize((0.491373, 0.482353, 0.446667), (0.247059, 0.243529, 0.261569))])
 
         dataset = torchvision.datasets.CIFAR100(root=root,
             train=True,

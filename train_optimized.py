@@ -102,7 +102,7 @@ def main():
     
     save_model_info(config, file=out)
 
-    f = resnet26(config, 1,normal_obj=normal_obj)
+    f = resnet26(config, 1,normal_obj)
     f.cuda()
 
     if config.model == "adib":

@@ -62,7 +62,7 @@ def main():
 
     elif config.dataset == "svhn":
         train_loader, oe_loader, val_loader = svhn(config)
-        alpha=0.02831072223186493
+        alpha=0.028310422553186493
         
         
         ds_mean =(0.491373, 0.482353, 0.446667)
@@ -223,10 +223,10 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         
             if attack_type == 'fgsm':
                 # adv_delta = fgsm(f, x, epsilon)
-                adv_delta = attack_pgd(f, x, epsilon , epsilon , 1)
+                adv_delta = attack_pgd( f, x, epsilon , 1.25*epsilon , 1 )
 
             if attack_type == 'pgd':
-                adv_delta = attack_pgd(f, x, epsilon ,alpha , 10)
+                adv_delta = attack_pgd( f, x, epsilon , 2/255 , 10 )
 
             x = x+adv_delta if labels == 0 else x-adv_delta
             x=torch.clamp(x, min=0, max=1)

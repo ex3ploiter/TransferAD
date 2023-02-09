@@ -18,8 +18,8 @@ import torch.nn as nn
 import torchvision
 from tqdm import tqdm
 
-from .fgsm import FGSM
-from .pgd import PGD
+from fgsm import FGSM
+from pgd import PGD
 
 
 

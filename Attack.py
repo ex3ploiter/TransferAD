@@ -12,9 +12,12 @@ def fgsm(model, inputs,epsilon):
     """ Construct FGSM adversarial examples on the examples X"""
     delta = torch.zeros_like(inputs, requires_grad=True)
     
+    delta.grad.zero_()
+    
     scores = torch.sigmoid(model(inputs+delta)).squeeze()
 
     scores.backward()
+    
 
     
     return epsilon * delta.grad.detach().sign()

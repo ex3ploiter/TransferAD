@@ -127,7 +127,8 @@ def main():
     num_epoches=0 if config.train=='False' else config.num_epochs
     
     
-    for epoch in range(num_epoches):
+    # for epoch in range(num_epoches):
+    for epoch in tqdm(range(num_epoches)):
         for i, batch in enumerate(zip(train_loader, oe_loader)):
 
             f.train()
@@ -205,7 +206,7 @@ def main():
 
 def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_clear=True):
     labels_arr = []
-    scores_arr = []
+    no_adv_scores_arr = []
     adv_scores_arr = []
 
     # for i, batch in enumerate(val_loader):
@@ -222,7 +223,7 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         
             if attack_type == 'fgsm':
                 # adv_delta = fgsm(f, x, epsilon)
-                adv_delta = attack_pgd(f, x, epsilon , 1.25*epsilon , 1)
+                adv_delta = attack_pgd(f, x, epsilon , epsilon , 1)
 
             if attack_type == 'pgd':
                 adv_delta = attack_pgd(f, x, epsilon ,alpha , 10)
@@ -233,7 +234,7 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         else:
             adv_scores=no_adv_score
         
-        scores_arr.append(no_adv_score.detach().cpu().item())
+        no_adv_scores_arr.append(no_adv_score.detach().cpu().item())
         adv_scores_arr.append(adv_scores.detach().cpu().item())
         labels_arr.append(labels.detach().cpu().item())
     
@@ -241,9 +242,12 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
     anomal_imgs_idx=np.argwhere(np.array(labels_arr)==1).flatten().tolist()
     
     
-    clear_auc=roc_auc_score(labels_arr, scores_arr)
-    normal_auc=roc_auc_score(np.array(labels_arr)[normal_imgs_idx].tolist()+np.array(labels_arr)[anomal_imgs_idx].tolist(),np.array(adv_scores_arr)[normal_imgs_idx].tolist()+np.array(scores_arr)[anomal_imgs_idx].tolist())
-    anomal_auc=roc_auc_score(np.array(labels_arr)[normal_imgs_idx].tolist()+np.array(labels_arr)[anomal_imgs_idx].tolist(),np.array(scores_arr)[normal_imgs_idx].tolist()+np.array(adv_scores_arr)[anomal_imgs_idx].tolist())
+    clear_auc=roc_auc_score(labels_arr, no_adv_scores_arr)
+    
+    normal_auc=roc_auc_score(np.array(labels_arr)[normal_imgs_idx].tolist()+np.array(labels_arr)[anomal_imgs_idx].tolist(),np.array(adv_scores_arr)[normal_imgs_idx].tolist()+np.array(no_adv_scores_arr)[anomal_imgs_idx].tolist())
+    
+    anomal_auc=roc_auc_score(np.array(labels_arr)[normal_imgs_idx].tolist()+np.array(labels_arr)[anomal_imgs_idx].tolist(),np.array(no_adv_scores_arr)[normal_imgs_idx].tolist()+np.array(adv_scores_arr)[anomal_imgs_idx].tolist())
+    
     both_auc=roc_auc_score(labels_arr, adv_scores_arr)
     
     

@@ -178,7 +178,8 @@ def main():
     mine_result['Attack_Type'] = []
     mine_result['Attack_Target'] = []
     mine_result['ADV_AUC'] = []
-
+    mine_result['setting'] = []
+    mine_result['setting'].extend(config.att_eps,alpha)
     
     if os.path.isfile(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth'):
         # f = torch.load('./model.pth')
@@ -208,6 +209,9 @@ def main():
 
 
 def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_clear=True):
+    print(f"Attack Type : {attack_type} , epsilon : {epsilon} , alpha : {alpha}")
+    
+    
     labels_arr = []
     no_adv_scores_arr = []
     adv_scores_arr = []
@@ -221,7 +225,7 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         
         no_adv_score=getScore(f,x)
         
-        attack_type='pgd'
+        
         
         if just_clear=='False':
         

@@ -247,8 +247,8 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
             adv_images = attack(x, labels)
             
 
-        # if i==60:
-        #     break
+        if i==60:
+            break
         
         adv_score=getScore(f,adv_images)    
         

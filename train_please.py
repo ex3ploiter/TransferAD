@@ -139,7 +139,7 @@ def main():
             print(f'\n\nAttack Type: {att_type}\n\n')
 
             
-            clear_auc,normal_auc,anomal_auc,both_auc = testModel(f, val_loader, attack_type=att_type,alpha=alpha,epsilon=config.att_eps,just_clear=config.just_clear)
+            clear_auc,normal_auc,anomal_auc,both_auc = testModel(f, val_loader, attack_type=att_type,alpha=alpha,epsilon=config.att_eps)
 
             mine_result['Attack_Type'].extend([att_type,att_type,att_type,att_type])
             mine_result['Attack_Target'].extend(['clean','normal','anomal','both'])

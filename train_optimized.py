@@ -210,6 +210,7 @@ def main():
 
 
 def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_clear=True):
+   
     print(f"Attack Type : {attack_type} , epsilon : {epsilon} , alpha : {alpha}")
     
     

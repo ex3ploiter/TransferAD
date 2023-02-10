@@ -117,6 +117,10 @@ def main():
         sched.step()
         newline(f=out)
         
+        if config.train=='True':
+            torch.save(f, f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')
+        
+        
         
         
     mine_result = {}

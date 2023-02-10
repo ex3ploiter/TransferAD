@@ -251,12 +251,17 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         #     break
         
         adv_score=getScore(f,adv_images)    
-    
         
         clear_scores_array.append(clear_score.detach().cpu().item())
         adv_scores_array.append(adv_score.detach().cpu().item())
         labels_array.append(labels.detach().cpu().item())
+        
 
+
+    clear_scores_array=np.array(clear_scores_array)
+    adv_scores_array=np.array(adv_scores_array)
+    labels_array=np.array(labels_array)
+    
     normal_imgs_idx=np.argwhere(labels_array==0).flatten().tolist()
     anomal_imgs_idx=np.argwhere(labels_array==1).flatten().tolist()
     

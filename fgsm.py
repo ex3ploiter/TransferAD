@@ -55,8 +55,8 @@ class FGSM(Attack):
         # adv_images = torch.clamp(adv_images, min=0, max=1).detach()
         
         # print(f'Label :  {labels}')
-        # print(f'new Score delta: {getScore(self.model,images,c,R,objective)}')
-        # print(f'new Score delta: {getScore(self.model,adv_images,c,R,objective)}\n\n')
+        # print(f'new Score delta: {getScore(self.model,x)}')
+        # print(f'new Score delta: {getScore(self.model,x)}\n\n')
         
 
         return adv_images

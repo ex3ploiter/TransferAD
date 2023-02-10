@@ -21,6 +21,8 @@ from tqdm import tqdm
 from fgsm import FGSM
 from pgd import PGD
 
+import os 
+import pd
 
 
 import functools
@@ -260,13 +262,10 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
     anomal_imgs_idx=np.argwhere(np.array(labels_arr)==1).flatten().tolist()
     
     
-    clear_auc=roc_auc_score(labels_arr, no_adv_scores_arr)
-    
-    normal_auc=roc_auc_score(np.array(labels_arr)[normal_imgs_idx].tolist()+np.array(labels_arr)[anomal_imgs_idx].tolist(),np.array(adv_scores_arr)[normal_imgs_idx].tolist()+np.array(no_adv_scores_arr)[anomal_imgs_idx].tolist())
-    
-    anomal_auc=roc_auc_score(np.array(labels_arr)[normal_imgs_idx].tolist()+np.array(labels_arr)[anomal_imgs_idx].tolist(),np.array(no_adv_scores_arr)[normal_imgs_idx].tolist()+np.array(adv_scores_arr)[anomal_imgs_idx].tolist())
-    
-    both_auc=roc_auc_score(labels_arr, adv_scores_arr)
+    clear_auc=roc_auc_score(labels_array, clear_scores_array)
+    normal_auc=roc_auc_score(labels_array[normal_imgs_idx].tolist()+labels_array[anomal_imgs_idx].tolist(),adv_scores_array[normal_imgs_idx].tolist()+clear_scores_array[anomal_imgs_idx].tolist())
+    anomal_auc=roc_auc_score(labels_array[normal_imgs_idx].tolist()+labels_array[anomal_imgs_idx].tolist(),clear_scores_array[normal_imgs_idx].tolist()+adv_scores_array[anomal_imgs_idx].tolist())
+    both_auc=roc_auc_score(labels_array, adv_scores_array)
     
     
     return clear_auc,normal_auc,anomal_auc,both_auc

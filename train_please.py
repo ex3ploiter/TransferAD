@@ -185,6 +185,7 @@ def testModel(f,val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
         clear_scores_array.append(clear_score.detach().cpu().item())
         adv_scores_array.append(adv_score.detach().cpu().item())
         labels_array.append(labels.detach().cpu().item())
+        
 
 
     clear_scores_array=np.array(clear_scores_array)
@@ -199,7 +200,7 @@ def testModel(f,val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
     normal_auc=roc_auc_score(labels_array[normal_imgs_idx]+labels_array[anomal_imgs_idx],adv_scores_array[normal_imgs_idx]+clear_scores_array[anomal_imgs_idx])
     anomal_auc=roc_auc_score(labels_array[normal_imgs_idx]+labels_array[anomal_imgs_idx],clear_scores_array[normal_imgs_idx]+adv_scores_array[anomal_imgs_idx])
     
-    clear_auc=roc_auc_score(labels_array, adv_scores_array)
+    both_auc=roc_auc_score(labels_array, adv_scores_array)
     
     return clear_auc,normal_auc,anomal_auc,both_auc
 

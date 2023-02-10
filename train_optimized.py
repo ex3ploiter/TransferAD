@@ -216,9 +216,9 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
     print(f"Attack Type : {attack_type} , epsilon : {epsilon} , alpha : {alpha}")
     
     
-    labels_arr = []
-    no_adv_scores_arr = []
-    adv_scores_arr = []
+    clear_scores_array=[]
+    adv_scores_array=[]
+    labels_array=[]
 
     # for i, batch in enumerate(val_loader):
     for (i, batch) in enumerate(tqdm(val_loader, desc='Testing Adversarial')):
@@ -227,44 +227,44 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         x, labels = to_gpu(x, labels)
         f.eval()
         
-        no_adv_score=getScore(f,x)
+        clear_score = getScore(f,x)
         
         
         
-        if just_clear=='False':
         
-            if attack_type == 'fgsm':
-                # adv_delta = fgsm(f, x, epsilon)
-                # adv_delta = attack_pgd(f, x,epsilon= epsilon ,alpha= 1.25*epsilon ,attack_iters= 1)
-                
-                attack = FGSM(f, eps=epsilon)
-                adv_images = attack(x,labels)
-
-            if attack_type == 'pgd':
-                # adv_delta = attack_pgd(f, x, epsilon=epsilon ,alpha= 2/255 ,attack_iters= 10)
-                
-                attack = PGD(f, eps=epsilon, alpha=alpha, steps=10, random_start=True)
-                adv_images = attack(x, labels)
-                
-
-            # x = x+adv_delta if labels == 0 else x-adv_delta
-            # x=torch.clamp(x, min=0, max=1)
+        
+        if attack_type == 'fgsm':
+            # adv_delta = fgsm(f, x, epsilon)
+            # adv_delta = attack_pgd(f, x,epsilon= epsilon ,alpha= 1.25*epsilon ,attack_iters= 1)
             
-            adv_scores=getScore(f,adv_images)
-        else:
-            adv_scores=no_adv_score
+            attack = FGSM(f, eps=epsilon)
+            adv_images = attack(x,labels)
+
+        if attack_type == 'pgd':
+            # adv_delta = attack_pgd(f, x, epsilon=epsilon ,alpha= 2/255 ,attack_iters= 10)
+            
+            attack = PGD(f, eps=epsilon, alpha=alpha, steps=10, random_start=True)
+            adv_images = attack(x, labels)
+            
+
+        if i==60:
+            break
         
-        no_adv_scores_arr.append(no_adv_score.detach().cpu().item())
-        adv_scores_arr.append(adv_scores.detach().cpu().item())
-        labels_arr.append(labels.detach().cpu().item())
+        adv_score=getScore(f,adv_images)    
     
-    normal_imgs_idx=np.argwhere(np.array(labels_arr)==0).flatten().tolist()
-    anomal_imgs_idx=np.argwhere(np.array(labels_arr)==1).flatten().tolist()
-    
+        
+    clear_scores_array.append(clear_score.detach().cpu().item())
+    adv_scores_array.append(adv_score.detach().cpu().item())
+    labels_array.append(labels.detach().cpu().item())
+
+    normal_imgs_idx=np.argwhere(labels_array==0).flatten().tolist()
+    anomal_imgs_idx=np.argwhere(labels_array==1).flatten().tolist()
     
     clear_auc=roc_auc_score(labels_array, clear_scores_array)
-    normal_auc=roc_auc_score(labels_array[normal_imgs_idx].tolist()+labels_array[anomal_imgs_idx].tolist(),adv_scores_array[normal_imgs_idx].tolist()+clear_scores_array[anomal_imgs_idx].tolist())
-    anomal_auc=roc_auc_score(labels_array[normal_imgs_idx].tolist()+labels_array[anomal_imgs_idx].tolist(),clear_scores_array[normal_imgs_idx].tolist()+adv_scores_array[anomal_imgs_idx].tolist())
+    
+    normal_auc=roc_auc_score(labels_array[normal_imgs_idx]+labels_array[anomal_imgs_idx],adv_scores_array[normal_imgs_idx]+clear_scores_array[anomal_imgs_idx])
+    anomal_auc=roc_auc_score(labels_array[normal_imgs_idx]+labels_array[anomal_imgs_idx],clear_scores_array[normal_imgs_idx]+adv_scores_array[anomal_imgs_idx])
+    
     both_auc=roc_auc_score(labels_array, adv_scores_array)
     
     

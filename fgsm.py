@@ -50,13 +50,25 @@ class FGSM(Attack):
                                    retain_graph=False, create_graph=False)[0]
 
         
-        adv_images= images+self.eps*grad.sign() if labels==0 else images-self.eps*grad.sign()
+        # adv_images= images+self.eps*grad.sign() if labels==0 else images-self.eps*grad.sign()
+
+        # adv_images= images-grad if labels==1 else images+grad 
+        # adv_images= images-grad 
+
+        if labels==1 :
+          adv_images=images-self.eps*grad.sign() 
+          # print("Label is 1")
+        elif labels==0:
+          adv_images=images+self.eps*grad.sign() 
+          # print("Label is 0")
+
+
         
-        # adv_images = torch.clamp(adv_images, min=0, max=1).detach()
+        adv_images = torch.clamp(adv_images, min=0, max=1).detach()
         
         # print(f'Label :  {labels}')
-        # print(f'new Score delta: {getScore(self.model,x)}')
-        # print(f'new Score delta: {getScore(self.model,x)}\n\n')
+        # print(f'prev Score delta: {getScore(self.model,images)}')
+        # print(f'new Score delta: {getScore(self.model,adv_images)}\n\n')
         
 
         return adv_images

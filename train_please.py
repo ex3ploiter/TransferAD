@@ -195,14 +195,12 @@ def testModel(f,val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01):
     normal_imgs_idx=np.argwhere(labels_array==0).flatten().tolist()
     anomal_imgs_idx=np.argwhere(labels_array==1).flatten().tolist()
     
-    clear_auc=roc_auc_score(labels_array, clear_scores_array)
+    auc_clear=roc_auc_score(labels, clear_scores_array)
+    auc_normal=roc_auc_score(labels[normal_imgs_idx].tolist()+labels[anomal_imgs_idx].tolist(),adv_scores_array[normal_imgs_idx].tolist()+clear_scores_array[anomal_imgs_idx].tolist())
+    auc_anomal=roc_auc_score(labels[normal_imgs_idx].tolist()+labels[anomal_imgs_idx].tolist(),clear_scores_array[normal_imgs_idx].tolist()+adv_scores_array[anomal_imgs_idx].tolist())
+    auc_both=roc_auc_score(labels, adv_scores_array) 
     
-    normal_auc=roc_auc_score(labels_array[normal_imgs_idx]+labels_array[anomal_imgs_idx],adv_scores_array[normal_imgs_idx]+clear_scores_array[anomal_imgs_idx])
-    anomal_auc=roc_auc_score(labels_array[normal_imgs_idx]+labels_array[anomal_imgs_idx],clear_scores_array[normal_imgs_idx]+adv_scores_array[anomal_imgs_idx])
-    
-    both_auc=roc_auc_score(labels_array, adv_scores_array)
-    
-    return clear_auc,normal_auc,anomal_auc,both_auc
+    return auc_clear,auc_normal,auc_anomal,auc_both
 
 class normalizC:
     def __init__(self,mu,std) :

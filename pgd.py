@@ -67,7 +67,7 @@ class PGD(Attack):
             if self.targeted:
                 cost = -loss(outputs, target_labels)
             else:
-                cost = loss(outputs.unsqueeze(0), labels.float())
+                cost = loss(outputs, labels.float())
 
             # Update adversarial images
             grad = torch.autograd.grad(cost, adv_images,
@@ -75,10 +75,10 @@ class PGD(Attack):
 
             adv_images = adv_images.detach() + self.alpha*grad.sign()
             delta = torch.clamp(adv_images - images, min=-self.eps, max=self.eps)
-            adv_images = torch.clamp(images + delta, min=0, max=1).detach()
+            # adv_images = torch.clamp(images + delta, min=0, max=1).detach()
 
         return adv_images
     
 def getScore(f,x):
-    scores = torch.sigmoid(f(x)).squeeze()
+    scores = torch.sigmoid(f(x)).view(1)
     return scores

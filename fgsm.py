@@ -41,32 +41,30 @@ class FGSM(Attack):
 
         images.requires_grad = True
         
-        cost=getScore(self.model,images)
+        outputs=getScore(self.model,images)
+        loss=nn.BCEWithLogitsLoss()
+        
+        
+        cost=loss(outputs,labels.float())
 
-        
-        
-        
         grad = torch.autograd.grad(cost, images,
                                    retain_graph=False, create_graph=False)[0]
 
         
-        # adv_images= images+self.eps*grad.sign() if labels==0 else images-self.eps*grad.sign()
+        
 
-        # adv_images= images-grad if labels==1 else images+grad 
-        # adv_images= images-grad 
 
         if labels==1 :
-          adv_images=images-self.eps*grad.sign() 
-          # print("Label is 1")
+          adv_images=images+self.eps*grad.sign() 
         elif labels==0:
           adv_images=images+self.eps*grad.sign() 
-          # print("Label is 0")
+          
 
 
         
-        adv_images = torch.clamp(adv_images, min=0, max=1).detach()
+        # adv_images = torch.clamp(adv_images, min=0, max=1).detach()
         
-        # print(f'\nLabel :  {labels}')
+        # print(f'Label :  {labels}')
         # print(f'prev Score delta: {getScore(self.model,images)}')
         # print(f'new Score delta: {getScore(self.model,adv_images)}\n\n')
         
@@ -74,7 +72,7 @@ class FGSM(Attack):
         return adv_images
     
 def getScore(f,x):
-    scores = torch.sigmoid(f(x)).squeeze()
+    scores = torch.sigmoid(f(x)).view(1)
     return scores
 
     

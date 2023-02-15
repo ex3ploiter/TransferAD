@@ -237,8 +237,11 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
             # adv_delta = fgsm(f, x, epsilon)
             # adv_delta = attack_pgd(f, x,epsilon= epsilon ,alpha= 1.25*epsilon ,attack_iters= 1)
             
-            attack = FGSM(f, eps=epsilon)
-            adv_images = attack(x,labels)
+            # attack = FGSM(f, eps=epsilon)
+            # adv_images = attack(x,labels)
+            
+            attack = PGD(f, eps=epsilon, alpha=alpha, steps=1, random_start=False)
+            adv_images = attack(x, labels)            
 
         if attack_type == 'pgd':
             # adv_delta = attack_pgd(f, x, epsilon=epsilon ,alpha= 2/255 ,attack_iters= 10)

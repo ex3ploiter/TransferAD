@@ -67,11 +67,11 @@ def main():
 
     elif config.dataset == "svhn":
         train_loader, oe_loader, val_loader = svhn(config)
-        alpha=0.028310422553186493
+        alpha=0.03948175571397176
         
         
-        ds_mean =(0.491373, 0.482353, 0.446667)
-        ds_std =(0.247059, 0.243529, 0.261569)
+        ds_mean =(0.4377, 0.4438, 0.4728)
+        ds_std =(0.1980, 0.2010, 0.1970)
 
         
 

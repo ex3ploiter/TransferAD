@@ -255,8 +255,8 @@ def testModel(f, val_loader, attack_type='fgsm',epsilon=8/255,alpha=0.01,just_cl
         adv_scores_array.append(adv_score.detach().cpu().item())
         labels_array.append(labels.detach().cpu().item())
         
-        if i==300:
-            break        
+        # if i==300:
+        #     break        
         
 
 

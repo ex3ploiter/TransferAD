@@ -24,6 +24,7 @@ def get_default_parser():
     parser.add_argument('--weight_decay', type=float, default=1.e-4)
     parser.add_argument('--train', type=str, default='False')
     parser.add_argument('--att_eps', type=float, default=8/255)
+    parser.add_argument('--att_alpha', type=float, default=0)
     parser.add_argument('--just_clear', type=str, default='False')
     
     return parser

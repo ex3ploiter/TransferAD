@@ -184,6 +184,10 @@ def main():
     mine_result['setting'] = []
     
     
+    if int(config.att_alpha)!=0:
+        alpha=config.att_alpha
+    
+    
     if os.path.isfile(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth'):
         # f = torch.load('./model.pth')
         f = torch.load(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')

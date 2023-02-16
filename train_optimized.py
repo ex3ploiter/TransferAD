@@ -188,8 +188,14 @@ def main():
         alpha=config.att_alpha
     
     
+
+
+
+    if os.path.isfile(f'/kaggle/input/adib-m-f-nist/TransferAD/model_ADIB_{config.dataset}_Class_{config.normal_class}.pth'):
+        f = torch.load(f'/kaggle/input/adib-m-f-nist/TransferAD/model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')
+        print("\nModel Loaded!(Kaggle)\n")
+
     if os.path.isfile(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth'):
-        # f = torch.load('./model.pth')
         f = torch.load(f'./model_ADIB_{config.dataset}_Class_{config.normal_class}.pth')
         print("\nModel Loaded!\n")
     

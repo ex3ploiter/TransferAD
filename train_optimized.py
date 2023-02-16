@@ -184,7 +184,7 @@ def main():
     mine_result['setting'] = []
     
     
-    if int(config.att_alpha)!=0:
+    if (config.att_alpha)!=0:
         alpha=config.att_alpha
     
     
